@@ -1,8 +1,13 @@
 #include<iostream>
 #include<vector>
 #include<cmath>
+#include<map>
 #include<string>
+#include<unordered_set>
+#include<unordered_map>
 #include<stack>
+#include<queue>
+#include<cstdlib>
 #include<algorithm>
 #include<limits.h>
 #include<ctype.h>
@@ -1732,26 +1737,20 @@ public:
     class Solution 
     {
     public:
-        ListNode* removeElements(ListNode* head, int val) 
-        {
-            if (!head) return nullptr;
-            if (!head->next) return head;
-            ListNode* p = head->next, * q = head;
-            while (p)
-            {
-                if (p->val == val) 
-                {
-                    q->next = p->next;
-                    p = q->next;
-                }
-                else
-                {
-                    p = p->next;
-                    q = q->next;
-                }
+    ListNode* removeElements(ListNode* head, int val) 
+    {
+        struct ListNode* dummyHead = new ListNode(0, head);
+        // 这里是直接创建了一个初始化了的ListNode的指针，与下面先生成结点ListNode l1(7)，再设置内容的方法不同。加不加struct好像没有区别。
+        struct ListNode* temp = dummyHead;
+        while (temp->next != NULL) {
+            if (temp->next->val == val) {
+                temp->next = temp->next->next;
+            } else {
+                temp = temp->next;
             }
-            return head->val == val ? p : head;
         }
+        return dummyHead->next;
+    }
 
 
         Solution()
@@ -1774,10 +1773,729 @@ public:
 };
 
 
+class Leetcode44  // Isomorphic Strings
+{
+public:
+    class Solution 
+    {
+    public:
+        bool isIsomorphic(string s, string t) // my method
+        {
+            map<char, char> dict;
+            for (int i = 0; i < s.size(); i++)
+            {
+                if (!dict.count(s[i])) 
+                {
+                    for(map<char,char>::iterator it = dict.begin(); it != dict.end(); it++) 
+                    {
+                        if( it->second == t[i]) return false;
+                    } 
+                    dict.insert(make_pair(s[i], t[i]));
+                }
+                else 
+                {
+                    if ((*(dict.find(s[i]))).second == t[i]) continue;
+                    else return false;
+                }
+            }
+            return true;
+        }
+
+
+        bool isIsomorphicOther(string s, string t)  // other method
+        {
+            for(int i = 0; i < s.size(); ++i)
+            {
+                if(s.find(s[i]) != t.find(t[i])) return false;
+            }
+            return true;
+        }
+
+
+        Solution()
+        {
+            cout << isIsomorphic("badc", "baba") << endl;
+        }
+    };
+};
+
+
+class Leetcode45  // Reverse Linked List
+{
+public:
+    class Solution 
+    {
+    public:
+        ListNode* reverseListIteration(ListNode* head)   // iteration, a little bit slow
+        {
+            if (!head) return nullptr;
+            ListNode* root = new ListNode(head->val);
+            while (head->next)
+            {
+                ListNode* newNode = new ListNode(head->next->val, root);
+                root = newNode;
+                head = head->next;
+            }
+            return root;
+            delete(root);
+        }
+
+
+        ListNode* reverseList(ListNode* head) 
+        {
+            if (!head || !head->next) {
+                return head;
+            }
+            ListNode* newHead = reverseList(head->next);
+            head->next->next = head;
+            head->next = nullptr;
+            return newHead;
+        }
+
+
+        Solution()
+        {
+            ListNode* head = new ListNode(5);
+            head = reverseList(head);
+            cout << head->val << endl;
+            delete head;
+        }
+    };
+};
+
+
+class Leetcode46  // Contains Duplicate I
+{
+public:
+    class Solution 
+    {
+    public:
+        /* simple way
+        bool containsDuplicate(vector<int>& nums) 
+        {
+            return set<int>(nums.begin(), nums.end()).size() != nums.size();
+
+        }
+        */
+
+
+        bool containsDuplicate(vector<int>& nums) 
+        {
+            sort(nums.begin(), nums.end());
+            for (int i = 0; i < nums.size() - 1; i++)
+            {
+                if (nums[i]== nums[i+1]) return true;
+            }
+            return false;
+        }
+
+
+        Solution()
+        {
+            vector<int>number = {1, 2, 3, 4, 5, 6};
+            cout << containsDuplicate(number) << endl;
+        }
+    };
+};
+
+
+class Leetcode47  // Contains Duplicate II
+{
+public:
+    class Solution 
+    {
+    public:
+        bool containsNearbyDuplicateBrutal(vector<int>& nums, int k)   // Runtime overflow
+        {
+            if (nums.size() == 0 || nums.size() == 1) return false;
+            for (int i = 0; i < nums.size() - 1; i++)
+            {
+                for (int j = i + 1; j <= i + k; j++)
+                {
+                        if ( j < nums.size() && nums[i] == nums[j] ) return true;
+                }
+            }
+            return false;
+        } 
+
+
+        bool containsNearbyDuplicate(vector<int>& nums, int k) 
+        {
+            unordered_set<int> existed;
+            int n = nums.size();
+            int curr = 0;
+            for (int i = 0; i < n; ++i)
+            {
+                curr = nums[i];
+                if (existed.find(curr) == existed.end())
+                {
+                    existed.insert(curr);
+                    if (existed.size() > k)  existed.erase(nums[i-k]);
+                }
+                else return true;
+            }
+            return false;
+        }
+
+
+        Solution()
+        {
+            vector<int>nums = {12, 23, 1, 2, 3};
+            cout << containsNearbyDuplicate(nums, 5) << endl;
+        }
+    };
+};
+
+
+class Leetcode48  // Implement Stack using Queues
+{
+public:
+    class MyStack 
+    {
+    public:
+        queue<int> q1;
+        queue<int> q2;
+
+
+    public:
+        void push(int x) 
+        {
+            q1.push(x);
+        }
+        
+
+        int pop() 
+        {
+            int flag = 0;
+            int num = q1.size() - 1;
+            while (flag != num - 1)
+            {
+                q2.push(q1.front());
+                q1.pop();
+                flag++;
+            }
+            int rec = q1.front();
+            q1.pop();
+            q1 = q2;
+            q2 = {};
+            return rec;
+        }
+        
+
+        int top() 
+        {
+            return q1.back();
+        }
+        
+
+        bool empty() 
+        {
+            if (q1.size() == 0) return true;
+            return false;
+        }
+    };
+
+
+    class Solution
+    {
+    public:
+        Solution()
+        {
+            MyStack mst;
+            mst.push(1);
+            mst.push(2);
+            int l1 = mst.top();
+            int l2 = mst.pop();
+            int l4 = mst.empty();
+            cout << l1 << endl;
+            cout << l2 << endl;
+            cout << l4 << endl;
+        }
+    };
+};
+
+
+class Leetcode49  // Invert a binary tree
+{
+public: 
+    class Solution 
+    {
+    public:
+        TreeNode* invertTree(TreeNode* root) 
+        {
+            if (root == nullptr) return nullptr;
+            TreeNode* left = invertTree(root->left);
+            TreeNode* right = invertTree(root->right);
+            root->left = right;
+            root->right = left;
+            return root;
+        }
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a binary tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode50  // Summary Ranges
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<string> summaryRangesMyMethod(vector<int>& nums)  // My method: works on vscode but can't work on leetcode(time over flow)
+        {
+            if (nums.empty()) return {};
+            if (nums.size() == 1) return {to_string(nums[0])};
+            int flag = 0;
+            vector<int>rec;
+            vector<string>output;
+            for (int i = 0; i < nums.size(); i++)
+            {
+                int flag = nums[i];
+                rec.emplace_back(nums[i]);
+                // while ( (nums[i++]) == (nums[i]++) );
+                while (nums[i + 1] && nums[i + 1] == nums[i] + 1) 
+                {
+                    i++;
+                }
+                if (nums[i] == flag) output.emplace_back(to_string(flag));
+                else
+                {
+                    if (i != nums.size() - 1)
+                    {
+                        rec.emplace_back(nums[i]);
+                        output.emplace_back(to_string(rec[rec.size() - 2]) + "->" + to_string(rec[rec.size() - 1]));
+                        rec.emplace_back(nums[i + 1]);
+                    }
+                    else 
+                    {
+                        rec.emplace_back(nums[i]);
+                        output.emplace_back(to_string(rec[rec.size() - 2]) + "->" + to_string(rec[rec.size() - 1]));
+                    }
+                }
+            }
+            return output;
+        }
+
+
+        vector<string> summaryRanges(vector<int>& nums)   // official answer
+        {
+            vector<string> ret;
+            int i = 0;
+            int n = nums.size();
+            while (i < n) 
+            {
+                int low = i;
+                i++;
+                while (i < n && nums[i] == nums[i - 1] + 1) 
+                {
+                    i++;
+                }
+                int high = i - 1;
+                string temp = to_string(nums[low]);
+                if (low < high) 
+                {
+                    temp.append("->");
+                    temp.append(to_string(nums[high]));
+                }
+                ret.push_back(move(temp));
+            }
+            return ret;
+        }
+
+
+        Solution()
+        {
+            vector<int> nums = {0, 1};
+            vector<string> out = summaryRanges(nums);
+            for (int i = 0; i < out.size(); i++)
+            {
+                cout << out[i] << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode51  // Power of two
+{
+public:
+    class Solution 
+    {
+    public:
+        bool isPowerOfTwoRecursion(int n)  // recursion
+        {
+            if (n == 0) return false;
+            if (n == 1) return true;
+            if (n % 2 == 1) return false;
+            else return isPowerOfTwoRecursion(n / 2);
+        }
+
+
+        bool isPowerOfTwo(int n)  // solve it without loops/recursion
+        {
+            if (n < 1) return false;
+            return (n & n-1) == 0;  // 8(1000) & 7(0111) == 0(0000)
+        }
+
+
+        Solution()
+        {
+            cout << isPowerOfTwo(3738) << endl;
+        }
+    };
+};
+
+
+class Leetcode52  // Implement Queue using Stacks
+{
+public:
+    class MyQueue
+    {
+    private:
+        stack<int> a;
+        stack<int> b;
+
+
+    public:
+        void push(int x) {a.push(x);}
+        
+
+        int pop()
+        {
+            int num = 0;
+            if (b.empty())
+            {
+                while(!a.empty())
+                {
+                    b.push(a.top());
+                    a.pop();
+                }
+            }
+            if (!b.empty())
+            {
+                num = b.top();
+                b.pop();
+            }
+
+            return num;
+        }
+        
+
+        int peek()
+        {
+            int num = 0;
+            if (b.empty())
+            {
+                while(!a.empty())
+                {
+                    b.push(a.top());
+                    a.pop();
+                }
+            }
+            if (!b.empty())
+                num = b.top();
+            
+            return num;
+        }
+        
+
+        bool empty()
+        {
+            if (a.empty() && b.empty())
+                return true;
+            return false;
+        }
+    };
+
+
+    class Solution
+    {
+        Solution()
+        {
+            cout << "No example here." << endl;
+        }
+    };
+};
+
+
+class Leetcode53  // Palindrome Linked List
+{
+public:
+    class Solution 
+    {
+    public:
+        bool isPalindromeMethodSector(ListNode* head)  // not the best answer. Time complex = Space complex = O(n)
+        {
+            vector<int> rec;
+            ListNode* p = head;
+            while (p)
+            {
+                rec.emplace_back(p->val);
+                p = p->next;
+            }
+            for (int i = 0; i <= rec.size() / 2; i++)
+            {
+                if (rec[i] != rec[rec.size() - 1 - i]) return false;
+            }
+            return true;
+        }
+
+
+        bool isPalindrome(ListNode* head)  // official answer
+        {
+            if (head == nullptr || head->next == nullptr) return true;
+            ListNode* slow = head; // 慢指针，找到链表中间分位置，作为分割
+            ListNode* fast = head;
+            ListNode* pre = head; // 记录慢指针的前一个节点，用来分割链表
+            while (fast && fast->next) 
+            {
+                pre = slow;
+                slow = slow->next;
+                fast = fast->next->next;
+            }
+            pre->next = nullptr; // 分割链表
+
+            ListNode* cur1 = head;  // 前半部分
+            ListNode* cur2 = reverseList(slow); // 反转后半部分，总链表长度如果是奇数，cur2比cur1多一个节点
+
+            // 开始两个链表的比较
+            while (cur1) 
+            {
+                if (cur1->val != cur2->val) return false;
+                cur1 = cur1->next;
+                cur2 = cur2->next;
+            }
+            return true;
+        }
+    // 反转链表
+        ListNode* reverseList(ListNode* head) 
+        {
+            ListNode* temp; // 保存cur的下一个节点
+            ListNode* cur = head;
+            ListNode* pre = nullptr;
+            while(cur) 
+            {
+                temp = cur->next;  // 保存一下 cur的下一个节点，因为接下来要改变cur->next
+                cur->next = pre; // 翻转操作
+                // 更新pre 和 cur指针
+                pre = cur;
+                cur = temp;
+            }
+            return pre;
+        }
+
+
+        Solution()
+        {
+            ListNode l1(1);
+            ListNode l2(2);
+            ListNode l3(3);
+            l1.next = &l2;
+            l2.next = &l3;
+            cout << isPalindrome(&l1) << endl;
+        }
+    };
+};
+
+
+class Leetcode54  // Lowest Common Ancestor of a Binary Search Tree
+{
+public:
+    class Solution 
+    {
+    public:
+        TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) 
+        {
+            if (root == p || root == q) return root;
+            if (root->val > p->val && root->val < q->val) return root;
+            else if (root->val > p->val && root->val > q->val)
+            {
+                return lowestCommonAncestor(root->left, p, q);
+            }
+            else if (root->val < p->val && root->val < q->val)
+            {
+                return lowestCommonAncestor(root->right, p, q);
+            }
+            return root;
+        }
+
+
+        Solution()
+        {
+        cout << "To lazy to generate a tree."  << endl;
+        }
+    };
+};
+
+
+class Leetcode55  // Delete Node in a Linked List (not a good problem...)
+{
+public:
+    class Solution 
+    {
+    public:
+        void deleteNode(ListNode* node) 
+        {
+            node->val = node->next->val;
+            node->next = node->next->next;
+        }
+
+
+        Solution()
+        {
+            cout << "This is not a good question..." << endl;
+        }
+    };
+};
+
+
+class Leetcode56  // Valid Anagram
+{
+public:
+    class Solution
+    {
+        bool isAnagram(string s, string t)  // method1
+        {
+            sort(s.begin(),s.end());
+            sort(t.begin(),t.end());
+            return s == t? true : false;
+        }
+
+
+        bool isAnagramWithMap(string s, string t)  // method2
+        {
+            if (s.size() != t.size()) return false;
+            unordered_map<char, int> dict;
+            for (int i = 0; i < s.size(); i++)
+            {
+                ++dict[s[i]];
+                --dict[t[i]];
+            }
+            for(unordered_map<char,int>::iterator it = dict.begin();it != dict.end(); it++)
+            {
+                if(it->second != 0) return false;
+            }
+            return true;
+        }
+
+
+        Solution()
+        {
+            cout << isAnagram("asdsa", "dsasa") << endl;
+        }
+    };
+};
+
+
+class Leetcode57  // Binary Tree Paths (hard for me...)
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<string> binaryTreePaths(TreeNode* root)  // recursion
+        {
+            vector<string> output;
+            goThrough(root, output, "");
+            return output;
+        }
+
+
+        void goThrough(TreeNode* root, vector<string>& output, string path)
+        {
+            if (root != nullptr) path += to_string(root->val);
+            if (!root->left && !root->right) output.emplace_back(path);
+            if (root->left) goThrough(root->left, output, path + "->");
+            if (root->right) goThrough(root->right, output, path + "->");
+        }
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a binary tree." << endl;
+        }
+
+
+        /* iteration. Official answer.
+        class Solution {
+        public:
+            vector<string> binaryTreePaths(TreeNode* root) {
+                vector<string> paths;
+                if (root == nullptr) {
+                    return paths;
+                }
+                queue<TreeNode*> node_queue;
+                queue<string> path_queue;
+
+                node_queue.push(root);
+                path_queue.push(to_string(root->val));
+
+                while (!node_queue.empty()) {
+                    TreeNode* node = node_queue.front(); 
+                    string path = path_queue.front();
+                    node_queue.pop();
+                    path_queue.pop();
+
+                    if (node->left == nullptr && node->right == nullptr) {
+                        paths.push_back(path);
+                    } else {
+                        if (node->left != nullptr) {
+                            node_queue.push(node->left);
+                            path_queue.push(path + "->" + to_string(node->left->val));
+                        }
+
+                        if (node->right != nullptr) {
+                            node_queue.push(node->right);
+                            path_queue.push(path + "->" + to_string(node->right->val));
+                        }
+                    }
+                }
+                return paths;
+            }
+        };
+        */
+    };
+};
+
+
+class Leetcode58  // Add Digits
+{
+public:
+    class Solution 
+    {
+    public:
+        int addDigits(int num)  // recursion
+        {
+            if (num < 10) return num;
+            return addDigits(((num / 10) + (num % 10)));
+        }
+
+
+        int addDigitsMath(int num)  // math
+        {
+            if (num == 0) return 0;
+            return num % 9 == 0 ? 9 : num % 9;
+        }
+
+
+        Solution()
+        {
+            cout << addDigits(1565312) << endl;
+            cout << addDigitsMath(1565312) << endl;
+        }
+    };
+};
+
+
 int main()
 {
     //查看题目结果格式：Leetcodex::Solution sx;
-    Leetcode43::Solution s14;
+    Leetcode58::Solution s14;
     system("pause");
     return 0;
 }
