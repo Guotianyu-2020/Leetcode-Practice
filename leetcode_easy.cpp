@@ -366,7 +366,7 @@ public:
     public:
         int removeElement(vector<int>& nums, int val) 
         {
-            /*  垃圾牄1�7
+            /*  垃圾牄1�71ￄ1�77
             int length = nums.size();
             for (int i = 0; i < nums.size()-1; i++)
             {
@@ -618,7 +618,7 @@ public:
             for(int i=lb;i<lm;i++) b="0"+b;
             //进位
             int carry=0;
-            //模拟全加器，分别计算结果和进位��1�7
+            //模拟全加器，分别计算结果和进位�ￄ1�71ￄ1�77
             for(int i=lm-1;i>=0;i--)
             {
                 /*两位是a,b,上一位进位是c0,这一位进位是c,结果是s
@@ -629,7 +629,7 @@ public:
                 carry=((a[i]-'0')&(b[i]-'0'))|(carry&((a[i]-'0')^(b[i]-'0')));
                 res=temp+res;
             }
-            //如果算完还有进位，需要补丄1�71
+            //如果算完还有进位，需要补丄1�71ￄ1�771
             if(carry==1)
                 res="1"+res;
             return res;
@@ -679,7 +679,7 @@ class Leetcode17  // Jump the steps
 public:
     class Solution {
     public:
-        /* 递归方法可以运行但是不够快捷，超出了力扣的时间要汄1�7
+        /* 递归方法可以运行但是不够快捷，超出了力扣的时间要汄1�71ￄ1�77
         int climbStairs(int n) 
         {
             if (n == 1) return 1;
@@ -1740,7 +1740,7 @@ public:
     ListNode* removeElements(ListNode* head, int val) 
     {
         struct ListNode* dummyHead = new ListNode(0, head);
-        // 这里是直接创建了一个初始化了的ListNode的指针，与下面先生成结点ListNode l1(7)，再设置内容的方法不同。加不加struct好像没有区别。
+        // 这里是直接创建了丢�个初始化了的ListNode的指针，与下面先生成结点ListNode l1(7)，再设置内容的方法不同��加不加struct好像没有区别〄1�7
         struct ListNode* temp = dummyHead;
         while (temp->next != NULL) {
             if (temp->next->val == val) {
@@ -2261,9 +2261,9 @@ public:
             pre->next = nullptr; // 分割链表
 
             ListNode* cur1 = head;  // 前半部分
-            ListNode* cur2 = reverseList(slow); // 反转后半部分，总链表长度如果是奇数，cur2比cur1多一个节点
+            ListNode* cur2 = reverseList(slow); // 反转后半部分，��链表长度如果是奇数，cur2比cur1多一个节炄1�7
 
-            // 开始两个链表的比较
+            // 弢�始两个链表的比较
             while (cur1) 
             {
                 if (cur1->val != cur2->val) return false;
@@ -2275,14 +2275,14 @@ public:
     // 反转链表
         ListNode* reverseList(ListNode* head) 
         {
-            ListNode* temp; // 保存cur的下一个节点
+            ListNode* temp; // 保存cur的下丢�个节炄1�7
             ListNode* cur = head;
             ListNode* pre = nullptr;
             while(cur) 
             {
-                temp = cur->next;  // 保存一下 cur的下一个节点，因为接下来要改变cur->next
+                temp = cur->next;  // 保存丢�丄1�7 cur的下丢�个节点，因为接下来要改变cur->next
                 cur->next = pre; // 翻转操作
-                // 更新pre 和 cur指针
+                // 更新pre 咄1�7 cur指针
                 pre = cur;
                 cur = temp;
             }
@@ -2492,10 +2492,569 @@ public:
 };
 
 
+class Leetcode59  // Ugly Number
+{
+public:
+    class Solution 
+    {
+    public:
+        bool isUgly(int n) 
+        {
+            if (n == 0) return false;
+            if (n == 1 || n == 2 || n == 3 || n == 5) return true;
+            else 
+            {
+                if (n % 2 == 0) return isUgly(n / 2);
+                if (n % 3 == 0) return isUgly(n / 3);
+                if (n % 5 == 0) return isUgly(n / 5);
+                return false;
+            }
+        }
+
+
+        Solution()
+        {
+            cout << isUgly(113114) << endl;
+        }
+    };
+};
+
+
+class Leetcode60  // Missing Number
+{
+public:
+    class Solution
+    {
+    public:
+        int missingNumber(vector<int>& nums)  // My method 1
+        {
+            sort(nums.begin(), nums.end());
+            for (int i = 0; i < nums.size(); i++)
+            {
+                if (nums[i] != i) return i;
+            }
+            return nums.size();
+        }
+
+
+        int missingNumber2(vector<int>& nums) // My method 2
+        {
+            int res = nums.size();
+            for (int i = 0; i < nums.size(); ++i){
+                res ^= nums[i];
+                res ^= i;
+            }
+            return res;
+        }
+
+
+        // good method
+        int missingNumber3(vector<int>& nums) 
+        {
+            int res = nums.size();
+            for (int i = 0; i < nums.size(); ++i)
+            {
+                res ^= nums[i];
+                res ^= i;
+            }
+            return res;
+        }
+        
+
+        Solution()
+        {
+            vector<int>nums = {1 , 2, 3, 0};
+            cout << missingNumber(nums) << endl;
+        }
+    };
+};
+
+
+class Leetcode61  // Move Zeros
+{
+public:
+    class Solution 
+    {
+    public:
+        void moveZeroes(vector<int>& nums) 
+        {
+            int n = nums.size(), left = 0, right = 0;
+            while (right < n) 
+            {
+                if (nums[right]) 
+                {
+                    swap(nums[left], nums[right]);
+                    left++;
+                }
+                right++;
+            }
+        }
+
+
+        Solution()
+        {
+            vector<int>nums = {0, 1, 0};
+            moveZeroes(nums);
+            for (int i = 0; i < nums.size(); i++)
+            {
+                cout << nums[i] << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode62  // Nim Game
+{
+public:
+    class Solution 
+    {
+    public:
+        bool canWinNim(int n) 
+        {
+            return n % 4 == 0 ? false : true;
+        }
+
+
+        Solution()
+        {
+            cout << canWinNim(152) << endl;
+        }
+    };
+};
+
+
+class Leetcode64  // Power Of Three
+{
+public:
+    class Solution 
+    {
+    public:
+        bool isPowerOfThree(int n) 
+        {
+            return n > 0 && 1162261467 % n == 0;
+        }
+
+
+        Solution()
+        {
+            cout << isPowerOfThree(1314) << endl;
+        }
+    };
+};
+
+
+class Leetcode65  // Count 1
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<int> countBits(int n) 
+        {
+            vector<int> res(n + 1);
+            for (int i = 1; i <= n; i++)
+            {
+                res[i] = res[i & (i - 1)] + 1;  // i & (i - 1)总会让i少一个1（最右边的一位），返回去的参照位置不同
+            }
+            return res;
+        }
+
+
+        Solution()
+        {
+            vector<int>nums = countBits(5);
+            for (int i = 0; i < nums.size(); i++)
+            {
+                cout << nums[i] << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode66  // Power Of 4
+{
+public:
+    class Solution 
+    {
+    public:
+        bool isPowerOfFour(int n) 
+        {
+            if (n == 0) return false;
+            while (n % 4 == 0)
+            {
+                n >>= 2;
+            }
+            return n == 1 ? true : false;
+        }
+
+
+        Solution()
+        {
+            cout << isPowerOfFour(438) << endl;
+        }
+    };
+};
+
+
+class Leetcode67  // Reverse a string
+{
+public:
+    class Solution 
+    {
+    public:
+        void reverseString(vector<char>& s) 
+        {
+            for (int i = 0, j = s.size() - 1; i < s.size() / 2; i++, j--)
+            {
+                swap(s[i], s[j]);
+            }
+        }
+
+
+        Solution()
+        {
+            vector<char> s = {'a', 's', 'k'};
+            reverseString(s);
+            cout << s[0] << s[1] << s[2] << endl;
+        }
+    };
+};
+
+
+class Leetcode68  // Reverse Vowels of a String
+{
+public:
+    class Solution 
+    {
+    public:
+        string reverseVowels(string s) 
+        {
+            int left = 0, right = s.size() - 1;
+            vector<char> vowels = {'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'};
+            while (left < right)
+            {
+                vector<char>::iterator it_left = find(vowels.begin(), vowels.end(), s[left]);
+                vector<char>::iterator it_right = find(vowels.begin(), vowels.end(), s[right]);
+                if (it_left != vowels.end() && it_right != vowels.end()) {swap(s[left], s[right]); right--; left++;}
+                else if (it_left == vowels.end() && it_right != vowels.end()) left++;
+                else if (it_left != vowels.end() && it_right == vowels.end()) right--;
+                else {right--; left++;}
+            }
+            return s;
+        }
+
+
+        Solution()
+        {
+            string ss = reverseVowels("hello");
+            cout << ss << endl;
+        }
+    };
+};
+
+
+class Leetcode69  // Intersection of Two Arrays(I)
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<int> intersection(vector<int>& nums1, vector<int>& nums2) 
+        {
+            unordered_set<int> output;
+            unordered_set<int> nums(nums1.begin(), nums1.end());  // 把nums1去重
+            for (int i : nums2)
+            {
+                if (nums.find(i) != nums.end()) output.insert(i);  // 插入时把nums2去重
+            }
+            return vector<int>(output.begin(), output.end());
+        }
+
+
+        Solution()
+        {
+            vector<int>a {1, 2, 3, 3};
+            vector<int>b {2, 3, 3, 4};
+            vector<int> num = intersection(a, b);
+            for (int i : num)
+            {
+                cout << i << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode70  // Intersection of Two Arrays(II)
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<int> intersect(vector<int>& nums1, vector<int>& nums2) 
+        {
+            vector<int> rst;
+            for (int i : nums1)
+            {
+                vector<int>::iterator it = find(nums2.begin(), nums2.end(), i);
+                if (it != nums2.end())
+                {
+                    rst.emplace_back(i);
+                    nums2.erase(it);
+                }
+            }
+            return rst;
+        }
+
+
+        Solution()
+        {
+            vector<int>n1 = {1, 2, 3, 6, 5, 2, 3, 2, 3, 2, 21, 2, 3};
+            vector<int>n2 = {1, 3, 4, 5, 3, 2, 1};
+            vector<int>n3 = intersect(n1, n2);
+            for (int i : n3)
+            {
+                cout << i << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode71  // Valid Perfect Square
+{
+public:
+    class Solution 
+    {
+    public:
+        bool isPerfectSquare(int num) 
+        {
+            if (num == 1) return true;
+            long sum = 0;
+            for (int i = 1; i <= num - 1; i += 2) 
+            {
+                sum += i;
+                if (sum == num) return true;
+                if (sum > num) return false;
+            }
+            return num == sum ? true : false;
+        }
+
+
+        Solution()
+        {
+            cout << isPerfectSquare(314159) << endl;
+        }
+    };
+};
+
+
+class Leetcode72  // Ransom Note
+{
+public:
+    class Solution 
+    {
+    public:
+        bool canConstruct(string ransomNote, string magazine) 
+        {
+            unordered_map<char, int> table;
+            for (int i = 0; i < ransomNote.size(); i++)
+            {
+                if (table.find(ransomNote[i]) == table.end())
+                {
+                    table.emplace(ransomNote[i], 1);
+                }
+                else 
+                {
+                    table.find(ransomNote[i])->second++;
+                }
+            }
+            for (int i = 0; i < magazine.size(); i++)
+            {
+                if (table.find(magazine[i]) != table.end())
+                {
+                    ((table.find(magazine[i]))->second)--;
+                }
+            }
+            for (unordered_map<char, int>::iterator it = table.begin(); it != table.end(); it++)
+            {
+                if (it->second > 0) return false;
+            }
+            return true;
+        }
+
+
+        /* 简化版
+        bool canConstruct(string ransomNote, string magazine) 
+        {
+            unordered_map<char,int> mag;
+            for(char c : magazine)
+            {
+                mag[c]++;
+            }
+            for(char c : ransomNote)
+            {
+                mag[c]--;
+                if(mag[c] < 0) return false;
+            }
+            return true;
+        }
+        */
+
+
+        Solution()
+        {
+            cout << canConstruct("bg", "bgg") << endl;
+        }
+    };
+};
+
+
+class Leetcode73  // First Unique Character in a String
+{
+public:
+    class Solution 
+    {
+    public:
+        int firstUniqChar(string s) 
+        {
+            unordered_map<char, int> rst;
+            for (char i : s)
+            {
+                rst[i]++;
+            }
+            for (int i = 0; i < s.size(); i++)
+            {
+                if (rst[s[i]] == 1) return i;
+            }
+            return -1;
+        }
+
+
+        Solution()
+        {
+            cout << firstUniqChar("leetcode") << endl;
+        }
+    };
+};
+
+
+class Leetcode74  // Find the Difference
+{
+public:
+    class Solution 
+    {
+    public:
+        char findTheDifference(string s, string t) 
+        {
+            int sum = 0;
+            for (auto i : t)
+                sum += i;
+            for (auto i : s)
+                sum -= i;
+            return sum;
+        }
+
+
+        Solution()
+        {
+            cout << findTheDifference("abbcd", "cbbgad") << endl;
+        }
+    };
+};
+
+
+class Leetcode75  // Is Subsequence
+{
+public:
+    class Solution 
+    {
+    public:
+        bool isSubsequence(string s, string t) 
+        {
+            int flag = 0;
+            for (int i = 0; i < t.size(); i++)
+            {
+                if (t[i] == s[flag])
+                {
+                    flag++;
+                }
+            }
+            return flag == s.size() ? true : false;
+        }
+
+
+        Solution()
+        {
+            cout << isSubsequence("asd","asaooodpjkofenod") << endl;
+        }
+    };
+};
+
+
+class Leetcode76  // Binary Watch
+{
+public:
+    class Solution {
+    public:
+        vector<string> readBinaryWatch(int turnedOn) 
+        {
+            vector<string> rst;
+            for (int i = 0; i <= 11; i++)
+            {
+                for (int j = 0; j <= 59; j++)
+                {
+                    if (__builtin_popcount(i) + __builtin_popcount(j) == turnedOn)
+                    {
+                        rst.emplace_back(to_string(i) + ":" + + (j < 10 ? "0" : "") + to_string(j));
+                    }
+                }
+            }
+            return rst;
+        }
+
+
+        Solution()
+        {
+            vector<string> out = readBinaryWatch(2);
+            for(string i: out)
+            {
+                cout << i << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode77  // Sum of Left Leaves
+{
+public:
+    class Solution 
+    {
+    public:
+        int sumOfLeftLeaves(TreeNode* root) 
+        {
+            if (!root) return 0;
+            int res = 0;
+            if (root->left && !root->left->left && !root->left->right) res += root->left->val;
+            return sumOfLeftLeaves(root->left) + sumOfLeftLeaves(root->right) + res;
+        }
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
 int main()
 {
     //查看题目结果格式：Leetcodex::Solution sx;
-    Leetcode58::Solution s14;
+    Leetcode76::Solution s14;
     system("pause");
     return 0;
 }
