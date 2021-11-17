@@ -13,6 +13,8 @@
 #include<ctype.h>
 #include<numeric>
 #include<bitset>
+#include<random>
+#include<time.h>
 #include"leetcode_easy_head.h"
 using namespace std;
 
@@ -3051,10 +3053,892 @@ public:
 };
 
 
+class Leetcode78  // Convert a Number to Hexadecimal
+{
+public:
+    class Solution 
+    {
+    public:
+        string toHex(long num) // 为什么传入long，因为案例-2147483648转化为正数不能传进来
+        {
+            string tab = "0123456789abcdef";
+            string rem = "";
+            int left = 0;
+            if (num == 0) return "0";
+            if (num >= 0)
+            {
+                while (num)
+                {
+                    rem += tab[num % 16];
+                    num = num / 16;
+                }
+                int right = rem.size() - 1;
+                while (left < right)
+                {
+                    swap(rem[left], rem[right]);
+                    left++;
+                    right--;
+                }
+                return rem;
+            }
+            else 
+            {
+                int flag = 0;
+                string out1 = toHex(-num);
+                out1 = string(8 - out1.size(), '0') + out1;
+                string out2 = "";
+                for (int j = out1.size() - 1; out1[j] == '0'; j--, flag++);
+                for (int i = 0; i < (7 - flag) ; i++)
+                {
+                    out2 += tab[15 - tab.find(out1[i])];
+                }
+                out2 += tab[16 - tab.find(out1[7 - flag])];
+                for (int i = 0; i != flag; i++) out2 += '0';
+                return out2;
+            }
+        }
+
+
+        /* 把传入的参数改为无符号类型可以避免分类讨论
+        string toHex(unsigned int num) 
+        {
+            constexpr auto str = "0123456789abcdef";  // 定义变量时可以用 constexpr 修饰，从而使该变量获得在编译阶段即可计算出结果的能力。
+            string ans;
+            while (num)
+            {
+                ans += str[num & 0xf];
+                num >>= 4;
+            }
+            reverse(ans.begin(), ans.end());
+
+            return ans.empty() ? "0" : ans;
+        }
+        */
+
+
+        Solution()
+        {
+            cout << toHex(-100000) << endl;
+        }
+    };
+};
+
+
+class Leetcode79  // Longest Palindrome
+{
+public:
+    class Solution 
+    {
+    public:
+        int longestPalindrome(string s) 
+        {
+            unordered_map<char, int> table;
+            int sum = 0, flag = 0;
+            for (char i : s) table[i]++;
+            for (unordered_map<char, int>::iterator it = table.begin(); it != table.end(); it++)
+            {
+                if (it->second % 2 == 0) sum += it->second;
+                else 
+                {
+                    sum += (it->second - 1);
+                    flag++;
+                }
+            }
+            if (flag != 0) sum++;
+            return sum;
+        }
+
+
+        Solution()
+        {
+            cout << longestPalindrome("dwauihwaiuesiufisnuieiufiuainidawi") << endl;
+        }
+    };
+};
+
+
+class Leetcode80  // FizzBuzz
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<string> fizzBuzz(int n) 
+        {
+            vector<string> rst;
+            for (int i = 1; i < n + 1; i++)
+            {
+                rst.emplace_back(judge(i));
+            }
+            return rst;
+        }
+
+
+        string judge(int n)
+        {
+            if (n % 15 == 0) return "FizzBuzz";
+            if (n % 5 == 0) return "Buzz";
+            if (n % 3 == 0) return "Fizz";
+            return to_string(n);
+        }
+
+
+        Solution()
+        {
+            vector<string>ss = fizzBuzz(1355);
+            for (string i : ss) cout << i << " ";
+        }
+    };
+};
+
+
+class Leetcode81  // Third Maximum Number
+{
+public:
+    class Solution 
+    {
+    public:
+        int thirdMax(vector<int>& nums) // 此方法用到的sort函数时间复杂度为O(nlogn),还可以改进
+        {
+            if (nums.size() == 1) return nums[0];
+            if (nums.size() == 2) 
+            {
+                return nums[0] > nums[1] ? nums[0] : nums[1];
+            }
+            else
+            {
+                sort(nums.begin(), nums.end());
+                nums.erase(unique(nums.begin(), nums.end()), nums.end());  // unique函数去重
+                if (nums.size() < 3) return thirdMax(nums);
+                return nums[nums.size() - 3];
+            }
+            return 0;
+        }
+
+
+        /*直接一次遍历，时间复杂度O(n)
+        int thirdMax(vector<int> &nums) 
+        {
+            long a = LONG_MIN, b = LONG_MIN, c = LONG_MIN;
+            for (long num : nums) 
+            {
+                if (num > a) 
+                {
+                    c = b;
+                    b = a;
+                    a = num;
+                } else if (a > num && num > b) 
+                {
+                    c = b;
+                    b = num;
+                } else if (b > num && num > c) 
+                {
+                    c = num;
+                }
+            }
+            return c == LONG_MIN ? a : c;
+        }
+        */
+
+
+        Solution()
+        {
+            vector<int>nums = {1, 2, 3, 6, 6, 4, 3, 8, 4, 3};
+            cout << thirdMax(nums) << endl;
+        }
+    };
+};
+
+
+class Leetcode82  // Add Strings
+{
+public:
+    class Solution 
+    {
+    public:
+        string addStrings(string num1, string num2) 
+        {
+            string str;
+            int cur = 0, i = num1.size()-1, j = num2.size()-1;
+            while (i >= 0 || j >= 0 || cur != 0) 
+            {
+                if (i >= 0) cur += num1[i--] - '0';
+                if (j >= 0) cur += num2[j--] - '0';
+                str += to_string (cur % 10);
+                cur /= 10;
+            }
+            reverse(str.begin(), str.end());
+            return str;
+        }
+
+
+        Solution()
+        {
+            cout << addStrings("1298918908634869879434684496013", "498676232283682678767831838678775353141413178675453143512") << endl;
+        }
+    };
+};
+
+
+class Leetcode83  // Number of Segments in a String
+{
+public:
+    class Solution 
+    {
+    public:
+        int countSegments(string s) 
+        {
+            s += ' ';
+            int cnt = 0;
+            for (int i = 0; i < s.size() - 1; i++) {
+                if (s[i] != ' ' && s[i + 1] == ' ') {
+                    cnt++;
+                }
+            }
+            return cnt;
+        }
+
+
+        Solution()
+        {
+            cout << countSegments("asd fgh jhgfr, ., hu") << endl;
+        }
+    };
+};
+
+
+class Leetcode84  // Arranging Coins
+{
+public:
+    class Solution {
+    public:
+        int arrangeCoins(int n) 
+        {
+            int i = 1;
+            for (; n >= i; i++) n -= i;
+            return --i;
+        }
+
+ 
+        int arrangeCoinsBinary(int n)  // 二分法
+        {
+            return (-1+sqrt(1+(long long int)8*n))/2;
+        }
+
+
+        Solution()
+        {
+            cout << arrangeCoins(1352668311) << endl;
+        }
+    };
+};
+
+
+class Leetcode85  // Find All Numbers Disappeared in an Array
+{
+public:
+    class Solution {
+    public:
+        vector<int> findDisappearedNumbers(vector<int>& nums) 
+        {
+            for (int i = 0; i < nums.size(); ++i)
+                nums[abs(nums[i])-1] = -abs(nums[abs(nums[i])-1]);  // 考虑到了反转两次的情况
+            vector<int> res;
+            for (int i = 0; i < nums.size(); ++i)
+            {
+                if (nums[i] > 0)
+                    res.push_back(i+1);
+            }
+            return res;
+        }
+
+
+        Solution()
+        {
+            vector<int>num = {1, 3, 5, 2, 1, 3, 5, 2, 6, 4, 3};
+            num = findDisappearedNumbers(num);
+            for (int i : num)
+            {
+                cout << i << " ";
+            }
+        }
+    };
+};
+
+
+class Leetcode86  // Minimum Moves to Equal Array Elements
+{
+public:
+    class Solution {
+    public:
+        int minMoves(vector<int>& nums) 
+        {
+            int sum = 0, min = nums[0];
+            for (int i : nums) if (i < min) min = i;
+            for (int i : nums) sum += (i - min);
+            return sum;
+        }
+
+
+        Solution()
+        {
+            vector<int>nums = {1, 3, 8};
+            cout << minMoves(nums) << endl;
+        }
+    };
+};
+
+
+class Leetcode87  // Assign Cookies
+{
+public:
+    class Solution 
+    {
+    public:
+        int findContentChildren(vector<int>& g, vector<int>& s) 
+        {
+            sort(g.begin(), g.end());
+            sort(s.begin(), s.end());
+            int i = 0, j = 0;
+            for (; i < g.size() && j < s.size(); i++, j++)
+            {
+                if (g[i] > s[j]) 
+                {
+                    while (s[j] < g[i]) 
+                    { 
+                        if (j != s.size() - 1) j++;
+                        else return i;
+                    }
+                }
+            }
+            return i;
+        }
+
+
+        /*简化版
+        int findContentChildren(vector<int>& g, vector<int>& s) 
+        {
+            sort(g.begin(),g.end());
+            sort(s.begin(),s.end());
+            int index = 0;
+            for(int i = 0;i < s.size();++i)
+            {
+                if(index < g.size() && g[index] <= s[i]) index++;
+            }
+            return index;
+        }
+        */
+
+
+        Solution()
+        {
+            vector<int>children = {1, 2, 3};
+            vector<int>biscuit = {1, 1};
+            cout << findContentChildren(children, biscuit) << endl;
+        }
+    };
+};
+
+
+class Leetcode88  // Repeated Substring Pattern (hard for me)
+{
+public:
+    class Solution 
+    {
+    public:
+        bool repeatedSubstringPattern(string s) 
+        {
+            return (s + s).find(s, 1) != s.size();  // 用kmp算法代替find函数效率更高
+        }
+
+
+        Solution()
+        {
+            cout << repeatedSubstringPattern("aaabbbcdcdaaabbbcdcd") << endl;
+        }
+    };
+};
+
+
+class Leetcode89  // Hamming Distance
+{
+public:
+    class Solution {
+    public:
+        int hammingDistance(int x, int y) 
+        {
+            int d = 0;
+            int z = x ^ y;
+            while (z != 0) {
+                z = z & (z - 1);
+                d++;
+            }
+            return d;
+        }
+
+
+        /*使用内置函数计算二进制数中1的个数
+            return __builtin_popcount(x ^ y);
+        */
+
+
+        Solution()
+        {
+            cout << hammingDistance(25, 52) << endl;
+        }
+    };
+};
+
+
+class Leetcode90  // Island Perimeter
+{
+public:
+    class Solution {
+    public:
+        int islandPerimeter(vector<vector<int>>& grid) 
+        {
+            int total = 0;
+            for (int i = 0; i < grid.size(); i++)  // 对行进行处理
+            {
+                for (int j = 0; j < grid[i].size(); j++)  // 对列进行处理
+                {
+                    if (grid[i][j] == 1) 
+                    {
+                        total += 4;
+                        if (i != grid.size() - 1 && grid[i][j] == grid[i + 1][j]) total--;
+                        if (i != 0 && grid[i][j] == grid[i - 1][j]) total--;
+                        if (j != grid[i].size() - 1 && grid[i][j] == grid[i][j + 1]) total--;
+                        if (j != 0 && grid[i][j] == grid[i][j - 1]) total--;
+                    }
+                }
+            }
+            return total;
+        }
+
+
+        Solution()
+        {
+            vector<vector<int>> island = {{0,1,0,0},{1,1,1,0},{0,1,0,0},{1,1,0,0}};
+            cout << islandPerimeter(island) << endl;
+        }
+    };
+};
+
+
+class Leetcode91  // Number Complement
+{
+public:
+    class Solution {
+    public:
+        int findComplement(int num) 
+        {
+            int highbit = 0;  
+            for (int i = 1; i <= 30; ++i) // 找到num二进制的最高位
+            {
+                if (num >= (1 << i)) 
+                {
+                    highbit = i;
+                }
+                else break;            
+            }
+            int mask = (highbit == 30 ? 0x7fffffff : (1 << (highbit + 1)) - 1);  // 此处分类是为了防止溢出，将num与同位数的全1进行异或即为所求
+            return num ^ mask;
+        }
+
+
+        /*  上面方法的精简版
+        int findComplement(int num) 
+        {
+            int temp = num, c = 0;
+            while(temp > 0){
+                temp >>= 1;
+                c =  (c << 1) + 1;  // 直接得到与num同位数的全1数
+            }
+            return num ^ c;
+        }
+        */
+
+
+        Solution()
+        {
+            cout << findComplement(12) << endl;
+        }
+    };
+};
+
+
+class Leetcode92  // License Key Formatting
+{
+public:
+    class Solution {
+    public:
+        string licenseKeyFormatting(string s, int k) 
+        {
+            string ans;
+            int cnt = 0;
+            for (int i = s.size() - 1; i >= 0; i--) 
+            {
+                if (s[i] != '-') 
+                {
+                    ans.push_back(toupper(s[i]));
+                    cnt++;
+                    if (cnt % k == 0) 
+                    {
+                        ans.push_back('-');
+                    }  
+                }
+            }
+            if (ans.size() > 0 && ans.back() == '-') 
+            {
+                ans.pop_back();
+            }
+            reverse(ans.begin(), ans.end());
+            return ans;
+        }
+
+
+        Solution()
+        {
+            cout << licenseKeyFormatting("asdkdsa", 3) << endl;
+        }
+    };
+};
+
+
+class Leetcode93  // Max Consecutive Ones
+{
+public:
+    class Solution 
+    {
+    public:
+        int findMaxConsecutiveOnes(vector<int>& nums) 
+        {
+            int max = 0;
+            for (int i = 1; i < nums.size(); i++)
+            {
+                if (nums[i - 1] && nums[i]) nums[i] += nums[i - 1];
+            }
+            for (int i : nums) max = (i >= max ? i : max);
+            return max;
+        }
+
+
+        Solution()
+        {
+            vector<int>num = {0, 1, 1, 0, 1, 1, 1};
+            cout << findMaxConsecutiveOnes(num) << endl;
+        }
+    };
+};
+
+
+class Leetcode94  // Construct the Rectangle
+{
+public:
+    class Solution {
+    public:
+        vector<int> constructRectangle(int area) 
+        {
+            int wide=sqrt(area);
+            while(area % wide!=0){
+                wide--;
+            }
+            return vector<int>{area/wide,wide};
+        }
+
+
+        Solution()
+        {
+            for (int i : constructRectangle(53))
+            {
+                cout << i << " ";
+            }
+        }
+    };
+};
+
+
+class Leetcode95  // Teemo Attacking
+{
+public:
+    class Solution 
+    {
+    public:
+        int findPoisonedDuration(vector<int>& timeSeries, int duration) 
+        {
+            int total = 0;
+            for (int i = 0; i < timeSeries.size() - 1; i++)
+            {
+                if (timeSeries[i] + duration > timeSeries[i + 1]) total += timeSeries[i + 1] - timeSeries[i];
+                else total += duration;
+            }
+            total += duration;
+            return total;
+        }
+
+
+        Solution()
+        {
+            vector<int> a{1, 2, 3, 4};
+            cout << findPoisonedDuration(a, 3) << endl;
+        }
+    };
+};
+
+
+class Leetcode96  // Next Greater Element I
+{
+public:
+    class Solution {
+    public:
+        vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) 
+        {
+            stack<int> s;
+            map<int, int> m;
+            vector<int> rst(nums1.size(), -1);
+            for (int i : nums2)
+            {
+                if (s.empty()) s.push(i);
+                else
+                {
+                    if (i < s.top()) s.push(i);
+                    else
+                    {
+                        while (!s.empty() && s.top() < i)
+                        {
+                            m[s.top()] = i;
+                            s.pop();
+                        }
+                        s.push(i);
+                    }
+                }
+            }
+            for (int i = 0; i < nums1.size(); i++)
+            {
+                map<int, int>::iterator pos = m.find(nums1[i]);
+                if (pos != m.end()) rst[i] = pos->second;
+            }
+            return rst;
+        }
+
+
+        Solution()
+        {
+            vector<int> n1 = {1, 2, 7, 5, 4, 6};
+            vector<int> n2 = {1, 2, 7, 5, 4, 6};
+            for (int i: nextGreaterElement(n1, n2))
+            cout << i <<endl;
+        }
+    };
+};
+
+
+class Leetcode97  // Keyboard Row
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<string> findWords(vector<string>& words) 
+        {
+            string row1 = "qwertyuiopQWERTYUIOP", row2 = "asdfghjklASDFGHJKL", row3 = "zxcvbnmZXCVBNM";
+            vector<string> rst;
+            for (string i : words)
+            {
+                int flag = 0;
+                string cmp;
+                for (char j : i) 
+                {
+                    if (flag == 0) 
+                    {
+                        if (find(row1.begin(), row1.end(), j) != row1.end()) cmp = row1;
+                        if (find(row2.begin(), row2.end(), j) != row2.end()) cmp = row2;
+                        if (find(row3.begin(), row3.end(), j) != row3.end()) cmp = row3;
+                    }
+                    if (find(cmp.begin(), cmp.end(), j) == cmp.end()) break;
+                    flag++;
+                }
+                if (flag == i.size()) rst.emplace_back(i);
+            }
+            return rst;
+        }
+
+
+        Solution()
+        {
+            vector<string> str = {"asdfghjklASDFGHJKL", "qwertyuiopQWERTYUIOP", "zxcvbnmZXCVBNM"};
+            for (string i : findWords(str))
+            {
+                cout << i << " ";
+            }
+        }
+    };
+};
+
+
+class Leetcode98  // Find Mode in Binary Search Tree
+{
+public:
+    class Solution 
+    {
+    public:
+        // 我的方法，太慢了
+        vector<int> InorderTraverseMy(TreeNode* root, vector<int>& nums)
+        {
+            if (root->left) InorderTraverseMy(root->left, nums);
+            nums.emplace_back(root->val);
+            if (root->right) InorderTraverseMy(root->right, nums);
+            return nums;
+        }
+
+
+        vector<int> findModeMy(TreeNode* root) 
+        {
+            vector<int> nums, out;
+            multimap<int, int, greater<int>> rst;
+            nums = InorderTraverseMy(root, nums);
+            int count = 1;
+            for (int i = 1; i < nums.size(); i++)
+            {
+                if (nums[i] == nums[i - 1]) count++;
+                else
+                {
+                    rst.insert(make_pair(count, nums[i - 1]));
+                    count = 1;
+                }
+            }
+            rst.insert(make_pair(count, nums[nums.size() - 1]));
+            multimap<int, int>::iterator it = rst.begin(), it1 = rst.begin();
+            it1++;
+            out.emplace_back(it->second);
+            for (; it1 != rst.end() ; it1++)
+            {
+                if (it1->first == it->first) out.emplace_back(it1->second); 
+            }
+            return out;
+        }
+        // 以上是我的方法
+
+
+        // 评论区优质方法，不使用额外空间，思想就是在中序遍历的过程中直接比较当前结点与上一个结点的值大小关系并计数
+        void inOrder(TreeNode* root, TreeNode*& pre, int& curTimes, int& maxTimes, vector<int>& res)
+        {
+            if (!root) return;
+            inOrder(root->left, pre, curTimes, maxTimes, res);
+            if (pre)
+                curTimes = (root->val == pre->val) ? curTimes + 1 : 1;
+            if (curTimes == maxTimes)
+                res.push_back(root->val);
+            else if (curTimes > maxTimes)
+            {
+                res.clear();
+                res.push_back(root->val);
+                maxTimes = curTimes;
+            }
+            pre = root;
+            inOrder(root->right, pre, curTimes, maxTimes, res);
+        }
+
+
+        vector<int> findMode(TreeNode* root) 
+        {
+            vector<int> res;
+            if (!root) return res;
+            TreeNode* pre = NULL;
+            int curTimes = 1, maxTimes = 0;
+            inOrder(root, pre, curTimes, maxTimes, res);
+            return res;
+        }
+
+
+        Solution()
+        {
+            TreeNode t3(2);
+            TreeNode t2(1, nullptr, &t3);
+            //TreeNode t1(1, nullptr, &t2);
+            for (int i : findMode(&t2))
+            {
+                cout << i << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode99  // Base 7
+{
+public:
+    class Solution {
+    public:
+        string convertToBase7(int num) 
+        {
+            int rem = 0;
+            string ss = "";
+            if (num == 0) return "0";
+            if (num < 0) return "-" + convertToBase7(-num);
+            while (num)
+            {
+                rem = num % 7;
+                num = num / 7;
+                ss += to_string(rem);
+            }
+            reverse(ss.begin(), ss.end());
+            return ss;
+        }
+
+        Solution()
+        {
+            cout << convertToBase7(53) << endl;
+        }
+    };
+};
+
+
+class Leetcode100  // Relative Ranks
+{
+public:
+    class Solution {
+    public:
+        vector<string> findRelativeRanks(vector<int>& score) 
+        {
+            int max_score = *max_element(score.begin(), score.end());  // 获取分数的最大值
+            vector<int> index(max_score + 1, -1);  // 申请一个包含max+1个全是-1的数组
+            for(int i = 0; i < score.size(); i++)
+            {
+                index[score[i]] = i;
+            }
+            vector<string> ret(score.size(),"");
+            int rank = score.size();  // 排名
+            int j = 0 ;  // index数组的下标。
+            while(rank > 0){
+                if(index[j] != -1){
+                    if(rank == 1)     { ret[index[j]] = "Gold Medal";   }
+                    else if(rank == 2){ ret[index[j]] = "Silver Medal"; }
+                    else if(rank == 3){ ret[index[j]] = "Bronze Medal"; }
+                    else{ ret[index[j]] = to_string(rank); }
+                    rank --;
+                }
+                j++;
+            }
+            return ret;
+        }
+
+
+        Solution()
+        {
+            vector<int> score = {5, 4, 3, 2, 1};
+            for (string i : findRelativeRanks(score))
+            {
+                cout << i << endl;
+            }
+        }
+    };
+};
+
 int main()
 {
     //查看题目结果格式：Leetcodex::Solution sx;
-    Leetcode76::Solution s14;
+    Leetcode100::Solution s14;
     system("pause");
     return 0;
 }
