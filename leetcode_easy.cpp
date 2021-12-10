@@ -1,4 +1,5 @@
 #include<iostream>
+#include<cstring>
 #include<vector>
 #include<cmath>
 #include<map>
@@ -368,7 +369,7 @@ public:
     public:
         int removeElement(vector<int>& nums, int val) 
         {
-            /*  垃圾牄1�71ￄ1�77
+            /*  垃圾牄1�71ￄ1�771ￄ1�71ￄ1�777
             int length = nums.size();
             for (int i = 0; i < nums.size()-1; i++)
             {
@@ -620,7 +621,7 @@ public:
             for(int i=lb;i<lm;i++) b="0"+b;
             //进位
             int carry=0;
-            //模拟全加器，分别计算结果和进位�ￄ1�71ￄ1�77
+            //模拟全加器，分别计算结果和进位�ￄ1�71ￄ1�771ￄ1�71ￄ1�777
             for(int i=lm-1;i>=0;i--)
             {
                 /*两位是a,b,上一位进位是c0,这一位进位是c,结果是s
@@ -631,7 +632,7 @@ public:
                 carry=((a[i]-'0')&(b[i]-'0'))|(carry&((a[i]-'0')^(b[i]-'0')));
                 res=temp+res;
             }
-            //如果算完还有进位，需要补丄1�71ￄ1�771
+            //如果算完还有进位，需要补丄1�71ￄ1�771ￄ1�71ￄ1�7771
             if(carry==1)
                 res="1"+res;
             return res;
@@ -681,7 +682,7 @@ class Leetcode17  // Jump the steps
 public:
     class Solution {
     public:
-        /* 递归方法可以运行但是不够快捷，超出了力扣的时间要汄1�71ￄ1�77
+        /* 递归方法可以运行但是不够快捷，超出了力扣的时间要汄1�71ￄ1�771ￄ1�71ￄ1�777
         int climbStairs(int n) 
         {
             if (n == 1) return 1;
@@ -1742,7 +1743,7 @@ public:
     ListNode* removeElements(ListNode* head, int val) 
     {
         struct ListNode* dummyHead = new ListNode(0, head);
-        // 这里是直接创建了丢�个初始化了的ListNode的指针，与下面先生成结点ListNode l1(7)，再设置内容的方法不同��加不加struct好像没有区别〄1�7
+        // 这里是直接创建了丢�个初始化了的ListNode的指针，与下面先生成结点ListNode l1(7)，再设置内容的方法不同��加不加struct好像没有区别〄1�71ￄ1�77
         struct ListNode* temp = dummyHead;
         while (temp->next != NULL) {
             if (temp->next->val == val) {
@@ -2263,7 +2264,7 @@ public:
             pre->next = nullptr; // 分割链表
 
             ListNode* cur1 = head;  // 前半部分
-            ListNode* cur2 = reverseList(slow); // 反转后半部分，��链表长度如果是奇数，cur2比cur1多一个节炄1�7
+            ListNode* cur2 = reverseList(slow); // 反转后半部分，��链表长度如果是奇数，cur2比cur1多一个节炄1�71ￄ1�77
 
             // 弢�始两个链表的比较
             while (cur1) 
@@ -2277,14 +2278,14 @@ public:
     // 反转链表
         ListNode* reverseList(ListNode* head) 
         {
-            ListNode* temp; // 保存cur的下丢�个节炄1�7
+            ListNode* temp; // 保存cur的下丢�个节炄1�71ￄ1�77
             ListNode* cur = head;
             ListNode* pre = nullptr;
             while(cur) 
             {
-                temp = cur->next;  // 保存丢�丄1�7 cur的下丢�个节点，因为接下来要改变cur->next
+                temp = cur->next;  // 保存丢�丄1�71ￄ1�77 cur的下丢�个节点，因为接下来要改变cur->next
                 cur->next = pre; // 翻转操作
-                // 更新pre 咄1�7 cur指针
+                // 更新pre 咄1�71ￄ1�77 cur指针
                 pre = cur;
                 cur = temp;
             }
@@ -2657,7 +2658,7 @@ public:
             vector<int> res(n + 1);
             for (int i = 1; i <= n; i++)
             {
-                res[i] = res[i & (i - 1)] + 1;  // i & (i - 1)总会让i少一个1（最右边的一位），返回去的参照位置不同
+                res[i] = res[i & (i - 1)] + 1;  // i & (i - 1)总会让i少一丄1�71（最右边的一位），返回去的参照位置不各1�7
             }
             return res;
         }
@@ -2888,7 +2889,7 @@ public:
         }
 
 
-        /* 简化版
+        /* 箢�化版
         bool canConstruct(string ransomNote, string magazine) 
         {
             unordered_map<char,int> mag;
@@ -3059,7 +3060,7 @@ public:
     class Solution 
     {
     public:
-        string toHex(long num) // 为什么传入long，因为案例-2147483648转化为正数不能传进来
+        string toHex(long num) // 为什么传入long，因为案侄1�7-2147483648转化为正数不能传进来
         {
             string tab = "0123456789abcdef";
             string rem = "";
@@ -3099,10 +3100,10 @@ public:
         }
 
 
-        /* 把传入的参数改为无符号类型可以避免分类讨论
+        /* 把传入的参数改为无符号类型可以避免分类讨讄1�7
         string toHex(unsigned int num) 
         {
-            constexpr auto str = "0123456789abcdef";  // 定义变量时可以用 constexpr 修饰，从而使该变量获得在编译阶段即可计算出结果的能力。
+            constexpr auto str = "0123456789abcdef";  // 定义变量时可以用 constexpr 修饰，从而使该变量获得在编译阶段即可计算出结果的能力〄1�7
             string ans;
             while (num)
             {
@@ -3198,7 +3199,7 @@ public:
     class Solution 
     {
     public:
-        int thirdMax(vector<int>& nums) // 此方法用到的sort函数时间复杂度为O(nlogn),还可以改进
+        int thirdMax(vector<int>& nums) // 此方法用到的sort函数时间复杂度为O(nlogn),还可以改迄1�7
         {
             if (nums.size() == 1) return nums[0];
             if (nums.size() == 2) 
@@ -3216,7 +3217,7 @@ public:
         }
 
 
-        /*直接一次遍历，时间复杂度O(n)
+        /*直接丢�次遍历，时间复杂度O(n)
         int thirdMax(vector<int> &nums) 
         {
             long a = LONG_MIN, b = LONG_MIN, c = LONG_MIN;
@@ -3320,7 +3321,7 @@ public:
         }
 
  
-        int arrangeCoinsBinary(int n)  // 二分法
+        int arrangeCoinsBinary(int n)  // 二分泄1�7
         {
             return (-1+sqrt(1+(long long int)8*n))/2;
         }
@@ -3342,7 +3343,7 @@ public:
         vector<int> findDisappearedNumbers(vector<int>& nums) 
         {
             for (int i = 0; i < nums.size(); ++i)
-                nums[abs(nums[i])-1] = -abs(nums[abs(nums[i])-1]);  // 考虑到了反转两次的情况
+                nums[abs(nums[i])-1] = -abs(nums[abs(nums[i])-1]);  // 考虑到了反转两次的情冄1�7
             vector<int> res;
             for (int i = 0; i < nums.size(); ++i)
             {
@@ -3415,7 +3416,7 @@ public:
         }
 
 
-        /*简化版
+        /*箢�化版
         int findContentChildren(vector<int>& g, vector<int>& s) 
         {
             sort(g.begin(),g.end());
@@ -3477,7 +3478,7 @@ public:
         }
 
 
-        /*使用内置函数计算二进制数中1的个数
+        /*使用内置函数计算二进制数丄1�71的个敄1�7
             return __builtin_popcount(x ^ y);
         */
 
@@ -3533,7 +3534,7 @@ public:
         int findComplement(int num) 
         {
             int highbit = 0;  
-            for (int i = 1; i <= 30; ++i) // 找到num二进制的最高位
+            for (int i = 1; i <= 30; ++i) // 找到num二进制的朢�高位
             {
                 if (num >= (1 << i)) 
                 {
@@ -3541,18 +3542,18 @@ public:
                 }
                 else break;            
             }
-            int mask = (highbit == 30 ? 0x7fffffff : (1 << (highbit + 1)) - 1);  // 此处分类是为了防止溢出，将num与同位数的全1进行异或即为所求
+            int mask = (highbit == 30 ? 0x7fffffff : (1 << (highbit + 1)) - 1);  // 此处分类是为了防止溢出，将num与同位数的全1进行异或即为扢�汄1�7
             return num ^ mask;
         }
 
 
-        /*  上面方法的精简版
+        /*  上面方法的精箢�牄1�7
         int findComplement(int num) 
         {
             int temp = num, c = 0;
             while(temp > 0){
                 temp >>= 1;
-                c =  (c << 1) + 1;  // 直接得到与num同位数的全1数
+                c =  (c << 1) + 1;  // 直接得到与num同位数的兄1�71敄1�7
             }
             return num ^ c;
         }
@@ -3817,7 +3818,7 @@ public:
             }
             return out;
         }
-        // 以上是我的方法
+        // 以上是我的方泄1�7
 
 
         // 评论区优质方法，不使用额外空间，思想就是在中序遍历的过程中直接比较当前结点与上一个结点的值大小关系并计数
@@ -3901,15 +3902,15 @@ public:
     public:
         vector<string> findRelativeRanks(vector<int>& score) 
         {
-            int max_score = *max_element(score.begin(), score.end());  // 获取分数的最大值
-            vector<int> index(max_score + 1, -1);  // 申请一个包含max+1个全是-1的数组
+            int max_score = *max_element(score.begin(), score.end());  // 获取分数的最大��1�7
+            vector<int> index(max_score + 1, -1);  // 申请丢�个包含max+1个全昄1�7-1的数组1�7
             for(int i = 0; i < score.size(); i++)
             {
                 index[score[i]] = i;
             }
             vector<string> ret(score.size(),"");
             int rank = score.size();  // 排名
-            int j = 0 ;  // index数组的下标。
+            int j = 0 ;  // index数组的下标��1�7
             while(rank > 0){
                 if(index[j] != -1){
                     if(rank == 1)     { ret[index[j]] = "Gold Medal";   }
@@ -3935,10 +3936,607 @@ public:
     };
 };
 
+
+class Leetcode101  // Perfect Number
+{
+public:
+    class Solution 
+    {
+    public:
+        bool checkPerfectNumberMy(int num) 
+        {
+            int sum = 0;
+            for (int i = 1; i <= num / 2; i++)
+            {
+                if (num % i == 0) sum += i;
+            }
+            return sum == num ? true : false;
+        }
+
+
+        bool checkPerfectNumber(int num) 
+        {
+            if (num==1) return false;
+            int sum = 1, i = 2;
+            for (; i * i < num; ++i) 
+            {
+                if (num % i == 0) sum+=i, sum+= num/i;
+            }            
+            return sum == num;
+        }
+
+
+        Solution()
+        {
+            cout << checkPerfectNumber(28) << endl;
+        }
+    };
+};
+
+
+class Leetcode102  // Fibnacci
+{
+public:
+    class Solution 
+    {
+    public:
+        int fib_recursion(int n)  // 递归
+        {
+            if (n < 2) return n;
+            return fib_recursion(n - 1) + fib_recursion(n - 2);
+        }
+
+
+        int fib_dp(int N)   // 动��规刄1�7
+        {
+            if (N <= 1) return N;
+            vector<int> dp(N + 1);
+            dp[0] = 0;
+            dp[1] = 1;
+            for (int i = 2; i <= N; i++) 
+            {
+                dp[i] = dp[i - 1] + dp[i - 2];
+            }
+            return dp[N];
+        }
+
+
+        Solution()
+        {
+            cout << fib_dp(12) << endl;
+        }
+    };
+};
+
+
+class Leetcode103  // Detect Capital
+{
+public:
+    class Solution 
+    {
+    public:
+        bool case1(string word)
+        {
+            string words;
+            for (char i : word) words += toupper(i);
+            if (word == words) return true;
+            return false;
+        }
+
+        bool case2(string word)
+        {
+            string words;
+            words += toupper(word[0]);
+            for (int i = 1; i < word.size(); i++) words += tolower(word[i]);
+            if (word == words) return true;
+            return false;
+        }
+
+        bool case3(string word)
+        {
+            string words;
+            for (char i : word) words += tolower(i);
+            if (word == words) return true;
+            return false;
+        }
+
+        bool detectCapitalUse(string word) 
+        {
+            return case1(word) || case2(word) || case3(word);
+        }
+
+
+        Solution()
+        {
+            cout << detectCapitalUse("FlaG") << endl;
+        }
+    };
+};
+
+
+class Leetcode104  // Longest Uncommon Subsequence I
+{
+public:
+    class Solution 
+    {
+    public:
+        int findLUSlength(string a, string b) 
+        {
+            if (a.size() > b.size()) return a.size();
+            if (a.size() < b.size()) return b.size();
+            if (a == b) return -1;
+            return a.size();
+        }
+
+
+        Solution()
+        {
+            cout << findLUSlength("aaa", "bbb") << endl;
+        }
+    };
+};
+
+
+class Leetcode105  // Minimum Absolute Difference in BST
+{
+public:
+    class Solution 
+    {
+    public:
+        int getMinimumDifference(TreeNode* root) 
+        {
+            vector<int>nums;
+            inOrderTraverse(root, nums);
+            int min = nums[nums.size() - 1];
+            for (int i = 0; i < nums.size() - 1; i++)
+            {
+                min = (nums[i + 1] - nums[i] < min ? nums[i + 1] - nums[i] : min);
+            }
+            return min;
+        }
+
+
+        void inOrderTraverse(TreeNode* root, vector<int>& nums)
+        {
+            if (!root);
+            if (root->left) inOrderTraverse(root->left, nums);
+            nums.emplace_back(root->val);
+            if (root->right) inOrderTraverse(root->right, nums);
+        }
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a tree.";
+        }
+    };
+};
+
+
+class Leetcode106  // Reverse String II
+{
+public:
+    class Solution 
+    {
+    public:
+        string reverseStr(string s, int k) 
+        {
+            for (int i = 0; i < s.size(); i += 2 * k) 
+            {
+                if (i + k <= s.size()) 
+                {
+                    reverse(s.begin() + i, s.begin() + i + k);
+                } else {
+                    reverse(s.begin() + i, s.end());
+                }
+            }
+            return s;
+        }
+
+
+        Solution()
+        {
+            cout << reverseStr("abcdefg", 4) << endl;
+        }
+    };
+};
+
+
+class Leetcode107  // Diameter of Binary Tree
+{
+public:
+    class Solution 
+    {
+        int ans;
+        int depth(TreeNode* rt)
+        {
+            if (rt == NULL) return 0; // 访问到空节点了，返回0
+            int L = depth(rt->left); // 左儿子为根的子树的深庄1�7
+            int R = depth(rt->right); // 右儿子为根的子树的深庄1�7
+            ans = max(ans, L + R + 1); // 计算d_node即L+R+1 并更新ans
+            return max(L, R) + 1; // 返回该节点为根的子树的深庄1�7
+        }
+
+    public:
+        int diameterOfBinaryTree(TreeNode* root) {
+            ans = 1;
+            depth(root);
+            return ans - 1;
+        }
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a tree" << endl;
+        }
+    };
+};
+
+
+class Leetcode108  // Student Attendance Record I
+{
+public:
+    class Solution 
+    {
+    public:
+        bool checkRecord(string s) {
+            int times = s.size(), abs = 0, cons_l = 0, max_cons_l = 0;
+            for (int i = 0; i < times; i++)
+            {
+                if (s[i] == 'A') abs++;
+                if (abs >= 2) return false;
+                if (s[i] == 'L') 
+                {
+                    cons_l = 0;
+                    while (s[i] == 'L')
+                    {
+                        cons_l++;
+                        i++;
+                    }
+                    max_cons_l = (cons_l > max_cons_l ? cons_l : max_cons_l);
+                    i--;
+                }
+                if (max_cons_l > 2) return false;
+            }
+            return true;
+        }
+
+        /* 评论区一行代码版：find正向查找，rfind逆向查找
+            return (s.find("LLL")==-1) && (s.find('A')==s.rfind('A'));
+            or:
+            return s.find("LLL") == std::string::npos && std::count(s.begin(), s.end(), 'A') < 2;
+        */
+        Solution()
+        {
+            cout << checkRecord("LPLLPLL") << endl;
+        }
+    };
+};
+
+
+class Leetcode109  // Reverse Words in a String III
+{
+public:
+    class Solution 
+    {
+    public:
+        string reverseWords(string s) 
+        {
+            for(int i = 0; i < s.size(); i ++)
+            {
+                if(s[i] == ' ') continue;
+                int j = i;
+                while(j < s.size() && s[j] != ' ') j ++;
+                reverse(s.begin() + i, s.begin() + j);
+                i = j;
+            }
+            return s;
+        }
+
+
+        Solution()
+        {
+            cout << reverseWords("I'm a big boy.") << endl;
+        }
+    };
+};
+
+
+class Leetcode110  // Maximum Depth of N-ary Tree
+{
+public:
+    class Solution 
+    {
+    public:
+        int maxDepth(Node* root) 
+        {
+            if (!root) return 0;
+            if (root->children.empty()) return 1;
+            vector<int> nums(root->children.size());
+            for (int i = 0; i < root->children.size(); i++)
+            {
+                nums[i] = maxDepth(root->children[i]);
+            }
+            return *max_element(nums.begin(),nums.end()) + 1;
+        }
+
+
+        /*来自评论区的优化算法
+        int maxDepth(Node* root) 
+        {
+            if (root == 0) return 0;
+            int depth = 0;
+            for (int i = 0; i < root->children.size(); i++) 
+            {
+                depth = max (depth, maxDepth(root->children[i]));  // 这一步很巧妙，在动态中寻找最大值
+            }
+            return depth + 1;
+        }
+        */
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode111  // Array Partition I
+{
+public:
+    class Solution 
+    {
+    public:
+        int arrayPairSum(vector<int>& nums) 
+        {
+            int sum = 0;
+            sort(nums.begin(), nums.end());
+            for (int i = 0; i < nums.size(); i += 2)
+            {
+                sum += nums[i];
+            }
+            return sum;
+        }
+
+
+        Solution()
+        {
+            vector<int>nums = {1, 2, 3, 4};
+            cout << arrayPairSum(nums) << endl;
+        }
+    };
+};
+
+
+class Leetcode112  // Binary Tree Tilt
+{
+public:
+    class Solution
+    {
+    private:
+        int p = 0;
+
+    public:
+        int findTilt(TreeNode* root)
+        {
+            if (!root) return 0;
+            dfs(root);
+            return p;
+        }
+
+
+        int dfs(TreeNode* root)
+        {
+            if (root->left && root->right) 
+            {
+                int left = dfs(root->left);
+                int right = dfs(root->right);
+                p += abs(left - right);
+                return left + right + root->val;
+            }
+            if (!root->left && !root->right) return root->val;
+            else if (root->left)
+            {
+                int left = dfs(root->left);
+                p += abs(left);
+                return left + root->val;
+            }
+            else
+            {
+                int right = dfs(root->right);
+                p += abs(right);
+                return right + root->val;
+            }
+            return 0;
+        }
+
+
+        /*简化版dfs函数
+        int dfs(TreeNode* root)
+        {
+            if (!root) 
+            {
+                return 0;
+            }
+            int left = dfs(root->left);
+            int right = dfs(root->right);
+            p += abs(left - right);
+            return left + right + root->val;
+        }
+        */
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode113  // Subtree of Another Tree
+{
+public:
+    class Solution 
+    {
+        public:
+            bool isSameTree(TreeNode* s, TreeNode* t)
+            {
+                if (!s && !t) return true;
+                return s && t && s->val == t->val && isSameTree(s->left, t->left) && isSameTree(s->right, t->right);
+            }
+
+
+            bool isSubtree(TreeNode* root, TreeNode* subRoot) 
+            {
+                if (!root && !subRoot) return true;
+                if (!root) return false;
+                return isSameTree(root, subRoot) || isSubtree(root->left, subRoot) || isSubtree(root->right, subRoot);
+            }
+
+
+            Solution()
+            {
+                cout << "Too lazy to generate a tree" << endl;
+            }
+        };
+};
+
+
+class Leetcode114  // Distribute Candies
+{
+public:
+    class Solution 
+    {
+    public:
+        int distributeCandies(vector<int>& candyType) 
+        {
+            sort(candyType.begin(), candyType.end());
+            int l = candyType.size() / 2;
+            int num = 1;
+            for (int i = 1; i < candyType.size(); i++) if (candyType[i] != candyType[i - 1]) num++;
+            return num > l ? l : num;
+        }
+
+
+        Solution()
+        {
+            vector<int> nums = {1, 2, 3, 4, 5, 6, 9, 8, 7, 6, 5, 4};
+            cout << distributeCandies(nums) << endl;
+        }
+    };
+};
+
+
+class Leetcode115  // N-ary Tree Preorder Traversal
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<int> nums;
+        stack<Node*> sta;
+
+        
+        vector<int> preorder(Node* root)  // recursion
+        {
+            if (!root) return nums;
+            nums.emplace_back(root->val);
+            for (int i = 0; i < root->children.size(); i++)
+            {
+                preorder(root->children[i]);
+            }
+            return nums;
+        }
+
+
+        vector<int> preorderIter(Node* root) 
+        {
+            if (!root) return nums;
+            sta.push(root);
+            while (!sta.empty())
+            {
+                auto cur = sta.top();
+                sta.pop();
+                nums.push_back(cur->val);
+                int n = (cur->children.size());
+                for (int i = n - 1; i >= 0; i--)
+                {
+                    if (cur->children[i]) sta.push(cur->children[i]);
+                }
+            }
+            return nums;
+        }
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode116 // N-ary Tree Postorder Traversal
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<int> nums;
+
+
+        vector<int> postorder(Node* root) 
+        {
+            if (!root) return nums;
+            if (root->children.size() != 0)
+            {
+                for (int i = 0; i < root->children.size(); i++)
+                {
+                    postorder(root->children[i]);
+                }  
+            } 
+            else
+            {
+                nums.emplace_back(root->val);
+            }
+            return nums;
+        }
+
+
+        vector<int> postorder(Node* root) 
+        {
+            stack<Node*> st;
+            vector<int> res;
+            if(!root) return {};
+            st.push(root);
+            while(!st.empty())
+            {
+                Node* node = st.top();
+                st.pop();
+                res.push_back(node->val);
+                int n = node->children.size();
+                for(int i = 0; i < n; i ++) if (node->children[i]) st.push(node->children[i]);
+            }
+            reverse(res.begin(),res.end());
+            return res;
+        }
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
 int main()
 {
     //查看题目结果格式：Leetcodex::Solution sx;
-    Leetcode100::Solution s14;
+    Leetcode109::Solution s14;
     system("pause");
     return 0;
 }
