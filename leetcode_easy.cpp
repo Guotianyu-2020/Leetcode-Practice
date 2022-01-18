@@ -4479,7 +4479,7 @@ public:
 };
 
 
-class Leetcode116 // N-ary Tree Postorder Traversal
+class Leetcode116  // N-ary Tree Postorder Traversal
 {
 public:
     class Solution 
@@ -4506,7 +4506,7 @@ public:
         }
 
 
-        vector<int> postorder(Node* root) 
+        vector<int> postorder2(Node* root) 
         {
             stack<Node*> st;
             vector<int> res;
@@ -4533,10 +4533,496 @@ public:
 };
 
 
+class Leetcode117  // Longest Harmonious Subsequence
+{
+public:
+    class Solution 
+    {
+    public:
+        int findLHS(vector<int>& nums) 
+        {
+            sort(nums.begin(), nums.end());
+            int p1 = 0, p2 = 0;
+            for (int i = 0; i < nums.size(); i++)
+            {
+                while (nums[i] - nums[p1] > 1) p1++;
+                if (nums[i] - nums[p1] == 1) p2 = max(p2, i - p1 + 1);
+            }
+            return p2;
+        }
+
+
+        Solution()
+        {
+            vector<int>nums = {1, 2, 3, 2, 1};
+            cout << findLHS(nums) << endl;
+        }
+    };
+};
+
+
+class Leetcode118  // Range Addition II
+{
+public:
+    class Solution {
+    public:
+        int maxCount(int m, int n, vector<vector<int>>& ops) 
+        {
+            int m1 = m, n1 = n;
+            for(int i = 0; i < ops.size(); i++)
+            {
+                m1 = min(m1,ops[i][0]);
+                n1 = min(n1,ops[i][1]);
+            }
+            return m1 * n1;
+        }
+
+
+        Solution()
+        {
+            vector<vector<int>> ops = {{1, 2}, {2, 3}};
+            cout << maxCount(5, 5, ops) << endl;
+        }
+    };
+};
+
+
+class Leetcode119  // Minimum Index Sum of Two Lists
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) 
+        {
+            unordered_map<string, int> rec;
+            int iter = 0, flag = 0;
+            int min = INT_MAX;
+            vector<string>rst;
+            for (string i : list1)
+            {
+                rec.emplace(i, iter++);
+            }
+            for (int j = 0; j < list2.size(); j++)
+            {
+                if (rec.count(list2[j]))
+                {
+                    if (flag == 0) 
+                    {
+                        min = j + rec[list2[j]];
+                        rst.emplace_back(list2[j]);
+                        flag++;
+                    }
+                    else
+                    {
+                        if (min == j + rec[list2[j]]) rst.emplace_back(list2[j]);
+                        if (min > j + rec[list2[j]]) 
+                        {
+                            min = j + rec[list2[j]];
+                            rst.clear();
+                            rst.emplace_back(list2[j]);
+                        }
+                    }
+                }
+            }
+            return rst;
+        }
+
+
+        Solution()
+        {
+            vector<string> list1 = {"aaa", "bbb", "ccc"};
+            vector<string> list2 = {"bbb", "ccc", "ddd"};
+            for (string i : findRestaurant(list1, list2))
+            {
+                cout << i << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode120  // Can Place Flowers
+{
+public:
+    class Solution {
+    public:
+        bool canPlaceFlowers(vector<int>& flowerbed, int n) 
+        {
+            if (n == 0) return true;
+            int plantable = 0;
+            for (int i = 0; i < flowerbed.size(); i++)
+            {
+                if (i == 0 && flowerbed[i] == 0) 
+                {
+                    plantable++;
+                    flowerbed[i] = 1;
+                }
+                if (i > 0)
+                {
+                    if (flowerbed[i] == 0 && flowerbed[i - 1] != 1) 
+                    {
+                        plantable++;
+                        flowerbed[i] = 1;
+                    }
+                    if (flowerbed[i] == 1 && flowerbed[i - 1] == 1)
+                    {
+                        plantable--;
+                    }
+                }    
+            }
+            return (plantable >= n ? true : false);
+        }
+
+
+        Solution()
+        {
+            vector<int> nums = {1, 0, 0, 0, 1};
+            cout << canPlaceFlowers(nums, 2) << endl;
+        }
+    };
+};
+
+
+class Leetcode121  // Construct String from Binary Tree
+{
+public:
+    class Solution 
+    {
+    public:
+        string tree2str(TreeNode* root)  // 思路不是很清晰
+        {
+            if (!root) return "";
+            string ss = "";
+            preOrderTraverse(root, ss);
+            ss = ss.substr(0, ss.length() - 1);
+            return ss;
+        }
+
+
+        void preOrderTraverse(TreeNode * root, string& s)
+        {
+            if (root) 
+            {
+                s += to_string(root->val);
+                if (root->left && root->right) s += "(";
+                if (!root->left && !root->right) s += ")";
+                if (!root->left && root->right) s += "()(";
+                if (!root->right && root->left) s += "(";
+            }
+            if (root->left) 
+            {
+                preOrderTraverse(root->left, s);
+                if (!root->right) s += ")";
+                if (root->right)  s += "(";
+            }
+            if (root->right) 
+            {
+                preOrderTraverse(root->right, s);
+                s += ")";
+            }
+        }
+
+
+        /* 评论区的方法，更加直接和简洁*/
+        string tree2strBetter(TreeNode* t) 
+        {
+            string res = "";
+            if(t==NULL) return res;
+            if(t->left==NULL && t->right == NULL)
+            {
+                res.append(to_string(t->val));
+                return res;
+            }
+            res.append(to_string(t->val));
+            res+=("("+tree2str(t->left)+")");
+            if(t->right!=NULL)
+            res+=("("+tree2str(t->right)+")");
+            return res;
+        }
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a tree.";
+        }
+
+    };
+};
+
+
+class Leetcode122  // Merge Two Binary Trees
+{
+public:
+    class Solution 
+    {
+    public:
+        TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) 
+        {
+            if (!root1 && !root2) return nullptr;
+            if (!root1) return root2;
+            if (!root2) return root1;
+            if (root1 && root2)
+            {
+                root1->val += root2->val;
+                if (root1->left && root2->left) mergeTrees(root1->left, root2->left);
+                if (root1->right && root2->right) mergeTrees(root1->right, root2->right);
+                if (!root1->left && root2->left)
+                {
+                    if (!root2->left->left && !root2->left->right)
+                    {
+                        root1->left = new TreeNode(root2->left->val);               
+                    }
+                    else if (root2->left->left && !root2->left->right)
+                    {
+                        root1->left = new TreeNode(root2->left->val, root2->left->left, nullptr);    
+                    }
+                    else if (!root2->left->left && root2->left->right)
+                    {
+                        root1->left = new TreeNode(root2->left->val, nullptr, root2->left->right);    
+                    }
+                    else
+                    {
+                        root1->left = new TreeNode(root2->left->val, root2->left->left, root2->left->right);
+                    }
+                }
+                if (!root1->right && root2->right)
+                {
+                    if (!root2->right->left && !root2->right->right)
+                    {
+                        root1->right = new TreeNode(root2->right->val);               
+                    }
+                    else if (root2->right->left && !root2->right->right)
+                    {
+                        root1->right = new TreeNode(root2->right->val, root2->right->left, nullptr);    
+                    }
+                    else if (!root2->right->left && root2->right->right)
+                    {
+                        root1->right = new TreeNode(root2->right->val, nullptr, root2->right->right);    
+                    }
+                    else
+                    {
+                        root1->right = new TreeNode(root2->right->val, root2->right->left, root2->right->right);
+                    }              
+                }
+            }
+            return root1;
+        }
+
+
+        /* 官方题解，深度搜索*/
+        TreeNode* mergeTreesDFS(TreeNode* t1, TreeNode* t2) 
+        {
+        if (t1 == nullptr) return t2;
+        if (t2 == nullptr) return t1;
+        auto merged = new TreeNode(t1->val + t2->val);
+        merged->left = mergeTrees(t1->left, t2->left);
+        merged->right = mergeTrees(t1->right, t2->right);
+        return merged;
+        }
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode123  // Maximum Product of Three Numbers
+{
+public:
+    class Solution 
+    {
+    public:
+        int maximumProduct(vector<int>& nums) 
+        {
+            sort(nums.begin(), nums.end());
+            return max(nums[nums.size() - 1] * nums[nums.size() - 2] * nums[nums.size() - 3], nums[nums.size() - 1] * nums[0] * nums[1]);
+        }
+
+
+        Solution()
+        {
+            vector<int> nums = {1, 2, 3, 4};
+            cout << maximumProduct(nums) << endl;
+        }
+    };
+};
+
+
+class Leetcode124  // Average of Levels in Binary Tree
+{
+public:
+    class Solution 
+    {
+    public:
+        vector<double> averageOfLevels(TreeNode* root) 
+        {
+            queue<TreeNode*> que;
+            if (root != NULL) que.push(root);
+            vector<double> result;
+            while (!que.empty()) 
+            {
+                int size = que.size();
+                double sum = 0; // 统计每一层的和
+                for (int i = 0; i < size; i++) 
+                {
+                    TreeNode* node = que.front();
+                    que.pop();
+                    sum += node->val;
+                    if (node->left) que.push(node->left);
+                    if (node->right) que.push(node->right);
+                }
+                result.push_back(sum / size); // 将每一层均值放进结果集
+            }
+            return result;
+        }
+
+
+        Solution()
+        {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode125  // Maximum Average Subarray I
+{
+public:
+    class Solution 
+    {
+    public:
+        double findMaxAverage(vector<int>& nums, int k) 
+        {
+            double sum = 0;
+            double aver = 0;
+            for (int i = 0; i < k; i++)
+            {
+                sum += nums[i];
+            }
+            aver = sum / k;
+            for (int i = k; i < nums.size(); i++)
+            {
+                sum = sum + nums[i] - nums[i - k];
+                aver = double(sum / k) > aver ? double(sum / k) : aver;
+            }
+            return aver;
+        }
+
+
+        Solution()
+        {
+            vector<int> nums = {4,2,1,3,3};
+            cout << findMaxAverage(nums, 2) << endl;
+        }
+    };
+};
+
+
+class Leetcode126  // Set Mismatch
+{
+public:
+    class Solution {
+    public:
+        vector<int> findErrorNums(vector<int>& nums) {
+            vector<int> rst(2);
+            sort(nums.begin(), nums.end());
+            if (nums[0] == 1) {
+                        for (int i = 0; i < nums.size(); i++) {
+                if (i != 0 && nums[i] == nums[i - 1]) {
+                    rst[0] = nums[i];
+                }
+                else if (i != 0 && nums[i] - nums[i - 1] != 1) {
+                    rst[1] = nums[i - 1] + 1;
+                }
+                if (rst[0] && rst[1]) return rst;
+            }
+            rst[1] = nums[nums.size() - 1] + 1;
+            return rst;
+            } else {
+                rst[1] = 1;
+                for (int i = 1; i < nums.size(); i++) {
+                    if (nums[i] == nums[i - 1]) {
+                        rst[0] = nums[i];
+                        return rst;
+                    }
+                }
+            }
+            return rst;
+        }
+
+
+        Solution() {
+            vector<int> nums = {1, 2, 3, 3};
+            nums = findErrorNums(nums);
+            for (int i: nums) cout << i << " ";
+        }
+    };
+};
+
+
+class Leetcode127 {  // Two Sum IV - Input is a BST
+public:
+    class Solution {
+    public: 
+        bool findTarget(TreeNode* root, int k) {
+            vector<int> nums;
+            inorderTraverse(root, nums);
+            int left = 0, right = nums.size() - 1;
+            while (left < right) {
+                if ((nums[left] + nums[right]) == k) return true;
+                if ((nums[left] + nums[right]) < k) left++;
+                if ((nums[left] + nums[right]) > k) right--;
+            }
+            return false;
+        }
+
+
+        void inorderTraverse(TreeNode* root, vector<int>& nums) {
+            if (root && root->left) inorderTraverse(root->left, nums);
+            if (root) nums.emplace_back(root->val);
+            if (root->right) inorderTraverse(root->right, nums);
+        }
+
+
+        Solution() {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode128 {  // Robot Return to Origin
+public:
+    class Solution {
+    public:
+        bool judgeCircle(string moves) {
+            vector<int> judge = {0, 0};
+            for (int i = 0; i < moves.size(); i++) {
+                if (moves[i] == 'R') judge[0]++;
+                if (moves[i] == 'L') judge[0]--;
+                if (moves[i] == 'U') judge[1]++;
+                if (moves[i] == 'D') judge[1]--;
+            }
+            return (judge[0] == 0 && judge[1] == 0 ? true : false);
+        }
+
+
+        Solution() {
+            cout << judgeCircle("LLDDLL") << endl;
+        }
+    };
+};
+
+
+
 int main()
 {
     //查看题目结果格式：Leetcodex::Solution sx;
-    Leetcode109::Solution s14;
+    Leetcode126::Solution s14;
     system("pause");
     return 0;
 }
