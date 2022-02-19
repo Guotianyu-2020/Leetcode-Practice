@@ -1831,9 +1831,1225 @@ public:
 };
 
 
+class Leetcode72 {  // 搜索二维矩阵
+public:
+    class Solution {
+    public:
+        bool searchMatrix(vector<vector<int>>& matrix, int target) {
+            int m = matrix.size(), n = matrix[0].size();
+            int low = 0, high = m * n - 1;
+            while (low <= high) {
+                int mid = (high - low) / 2 + low;
+                if(target == matrix[mid / n][mid % n])
+                    return true;
+                else if(target > matrix[mid / n][mid % n])
+                    low = mid + 1;
+                else if(target < matrix[mid / n][mid % n])
+                    high = mid - 1;
+            }
+            return false;
+        }
+
+
+        Solution() {
+            vector<vector<int>> nums = {{1,3,5,7},{10,11,16,20},{23,30,34,60}};
+            cout << searchMatrix(nums, 3) << endl;
+        }
+    };
+};
+
+
+class Leetcode75 {  // 颜色分类
+public:
+    class Solution {
+    public:
+        void sortColors(vector<int>& nums) {
+            int n = nums.size();
+            int p0 = 0, p1 = 0;
+            for (int i = 0; i < n; ++i) {
+                if (nums[i] == 1) {
+                    swap(nums[i], nums[p1]);
+                    ++p1;
+                } else if (nums[i] == 0) {
+                    swap(nums[i], nums[p0]);
+                    if (p0 < p1) {
+                        swap(nums[i], nums[p1]);
+                    }
+                    ++p0;
+                    ++p1;
+                }
+            }
+        }
+
+
+        Solution() {
+            vector<int> nums = {2, 0, 0, 1, 2, 0};
+            sortColors(nums);
+            for (int i : nums) {
+                cout << i << " ";
+            }
+        }
+    };
+};
+
+
+class Leetcode77 {  // 组合
+public:
+    class Solution {
+    public:
+        void backTracking(vector<vector<int>>& rst, vector<int>& path, int n, int k, int pos) {
+            if (path.size() == k) {
+                rst.emplace_back(path);
+                return;
+            }
+            for (int i = pos; i <= n; i++) {
+                if (find(path.begin(), path.end(), i) == path.end()) {
+                    if (path.size() != k - 1 && i == n ) return;
+                    path.emplace_back(i);
+                    backTracking(rst, path, n, k, i + 1);
+                    path.pop_back();                
+                }
+            }
+        }
+
+
+
+        vector<vector<int>> combine(int n, int k) {
+            vector<vector<int>> rst;
+            vector<int> path;
+            backTracking(rst, path, n, k, 1);
+            return rst;
+        }
+
+
+        Solution() {
+            vector<vector<int>> nums = combine(4, 3);
+            for (vector<int> i : nums) {
+                for (int j : i) {
+                    cout << j << " ";
+                }
+                cout << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode78 {  // 子集
+public:
+    class Solution {
+    public:
+        vector<vector<int>> result;
+        vector<int> path;
+        void backtracking(vector<int>& nums, int startIndex) {  // 回溯
+            result.push_back(path); 
+            for (int i = startIndex; i < nums.size(); i++) {
+                path.push_back(nums[i]);
+                backtracking(nums, i + 1);
+                path.pop_back();
+            }
+        }
+        vector<vector<int>> subsets(vector<int>& nums) {  // 一次遍历
+            vector<vector<int>> rst;
+            rst.push_back({});
+            for (int i = 0; i < nums.size(); i++) {
+                int len = rst.size();
+                for (int j = 0; j < len; j++) {
+                    vector<int> path1 = rst[j];
+                    path1.push_back(nums[i]);
+                    rst.push_back(path1);
+                }
+            }
+            return rst;
+        }
+        vector<vector<int>> subsetsRecursion(vector<int>& nums) {
+            result.clear();
+            path.clear();
+            backtracking(nums, 0);
+            return result;
+        }
+
+
+        Solution() {
+            vector<int> nums = {1, 2, 3};
+            for (vector<int> i : subsets(nums)) {
+                for (int j : i) {
+                    cout << j << " ";
+                }
+                cout << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode79 {  // 单词搜索(没懂)
+public:
+    class Solution {
+    public:
+        bool searchSlowOne(vector<vector<char>>& board, int i, int j, vector<vector<int>>& used, string& word, int pos) {
+            if (board[i][j] != word[pos]) {
+                return false;
+            } else if (pos == word.size() - 1) {
+                return true;
+            }
+            used[i][j] = true;
+            vector<pair<int, int>> directions{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+            bool result = false;
+            for (const auto& dir: directions) {
+                int newi = i + dir.first, newj = j + dir.second;
+                if (newi >= 0 && newi < board.size() && newj >= 0 && newj < board[0].size()) {
+                    if (!used[newi][newj]) {
+                        bool flag = searchSlowOne(board, newi, newj, used, word, pos + 1);
+                        if (flag) {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            used[i][j] = false;
+            return result;
+        }
+
+        // 很慢的回溯
+        bool existSlowOne(vector<vector<char>>& board, string word) {
+            vector<vector<int>> used(board.size(), vector<int>(board[0].size()));
+            for (int i = 0; i < board.size(); i++) {
+                for (int j = 0; j < board[0].size(); j++) {
+                        bool flag = searchSlowOne(board, i, j, used, word, 0);
+                        if (flag) return true;
+                    }
+                }
+            return false;
+        }
+
+        // 评论区方法
+        bool exist(vector<vector<char>>& board, string word) {
+            int m = board.size(), n = board[0].size();
+            vector<int> cnt(128, 0);
+            for (auto c : word) 
+                ++cnt[c];
+
+            if (cnt[word[0]] > cnt[word[word.size()-1]])    reverse(word.begin(), word.end());
+
+            for (auto v : board)
+                for (auto c : v)
+                    --cnt[c];
+
+            for (int i = 0; i < 128; ++i)
+                if (cnt[i] > 0) return false;
+            
+            for (int i = 0; i < m; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    if (board[i][j] == word[0] && dfs(board, word, 0, i, j)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        bool dfs(vector<vector<char>>& m, string s, int idx, int x, int y) {
+            if (x < 0 || x >= m.size() || y < 0 || y >= m[0].size() || m[x][y] != s[idx])   return false;
+            if (++idx == s.size())  return true;
+            
+            m[x][y] += 128;
+            if (dfs(m, s, idx, x, y+1)) return true;
+            if (dfs(m, s, idx, x, y-1)) return true;
+            if (dfs(m, s, idx, x-1, y)) return true;
+            if (dfs(m, s, idx, x+1, y)) return true;
+            m[x][y] -= 128;
+
+            return false;;
+        }
+
+
+        Solution() {
+            vector<vector<char>> list1 = {{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
+            cout << exist(list1, "ABCCED") << endl;
+        }
+    };
+};
+
+
+class Leetcode80 {  // 删除有序数组中的重复项 II
+public:
+    class Solution {
+    public:
+        int removeDuplicates(vector<int>& nums) {        
+            if (nums.size() <= 2) return nums.size();
+            for (int i = 0; i < nums.size() - 2; i++) {
+                int slow = i, fast = i + 2;
+                if (nums[slow] == nums[fast]) {
+                    nums.erase(nums.begin() + fast);
+                    i--;
+                }
+            }
+            return nums.size();
+        }
+
+
+        Solution() {
+            vector<int> nums = {1,1,1,1,2,2,3};
+            cout << removeDuplicates(nums) << endl;
+        }
+    };
+};
+
+
+class Leetcode81 {  // 搜索旋转排序数组 II
+public: 
+    class Solution {
+    public:
+        bool search(vector<int>& nums, int target) {
+            int l = 0, r = nums.size()-1;
+            while(l<=r){
+                //处理重复数字
+                while(l<r&&nums[l]==nums[l+1]) ++l;
+                while(l<r&&nums[r]==nums[r-1]) --r;
+                int mid = l+(r-l)/2;
+                if(nums[mid]==target) return true;
+                //左半部分有序
+                if(nums[mid]>=nums[l]){
+                    if(target<nums[mid]&&target>=nums[l]) r = mid-1;//target落在左半边
+                    else l = mid+1;
+                }
+                else{//右半部分有序
+                    if(target>nums[mid]&&target<=nums[r]) l = mid+1;//target落在右半边
+                    else r = mid-1;
+                }
+            }
+            return false;
+        }
+
+
+        Solution() {
+            vector<int> nums = {1,1,1};
+            cout << search(nums, 2) << endl;
+        }
+    };
+};
+
+
+class Leetcode82 {  // 删除排序链表中的重复元素 II
+public:
+    class Solution {
+    public:
+        ListNode* deleteDuplicates(ListNode* head) {
+            if (!head || !head->next) {
+                return head;
+            }
+            ListNode* p = head;
+            int temp = head->val;
+            while (p && p->next && p->val == p->next->val) {
+                temp = p->val;
+                while (temp == p->val) {
+                    p = p->next;
+                    if (!p) break;
+                }
+            }
+            head = p;
+            while (p) {
+                if (!p->next) break;
+                if (p->next->next && (p->next->next->val == p->next->val)) {
+                    temp = p->next->val;
+                    if (p->next->next->next) {
+                        p->next = p->next->next->next;                    
+                    } else {
+                        p->next = nullptr;
+                    }
+                } else if (p->next && p->next->val == temp) {
+                    p->next = p->next->next;
+                } else if ((!p->next->next && p->next) || (!p->next)) {
+                    return head;
+                } else {
+                    p = p->next;
+                }
+            }
+            return head;
+        }
+
+        Solution() {
+            ListNode* l1 = new ListNode(4);
+            ListNode* l2 = new ListNode(4);
+            ListNode* l3 = new ListNode(4);
+            ListNode* l4 = new ListNode(5);
+            ListNode* l5 = new ListNode(6);
+            ListNode* l6 = new ListNode(7);
+            l1->next = l2;
+            l2->next = l3;
+            l3->next = l4;
+            l4->next = l5;
+            l5->next = l6;
+            l1 = deleteDuplicates(l1);
+            while (l1) {
+                cout << l1->val << endl;
+                l1 = l1->next;
+            }
+        }
+    };
+};
+
+
+class Leetcode86 {  // 分隔链表
+public:
+    class Solution {
+    public:
+        ListNode* partition(ListNode* head, int x) {
+            vector<ListNode*> small, big;
+            ListNode* p = head;
+            while (p) {
+                if (p->val < x) {
+                    small.push_back(p);
+                } else {
+                    big.push_back(p);
+                }
+                p = p->next;
+            }
+            if (small.size() == 0 || big.size() == 0) return head; 
+            for (int i = 0; i < small.size() - 1; i++) {
+                small[i]->next = small[i + 1];
+            }
+            small[small.size() - 1]->next = big[0];
+            for (int i = 0; i < big.size() - 1; i++) {
+                big[i]->next = big[i + 1];
+            }
+            big[big.size() - 1]->next = nullptr;
+            return small[0];
+        }
+
+
+        Solution() {
+            ListNode* l1 = new ListNode(1);
+            ListNode* l2 = new ListNode(4);
+            ListNode* l3 = new ListNode(3);
+            ListNode* l4 = new ListNode(2);
+            ListNode* l5 = new ListNode(5);
+            ListNode* l6 = new ListNode(2);
+            l1->next = l2;
+            l2->next = l3;
+            l3->next = l4;
+            l4->next = l5;
+            l5->next = l6;
+            l1 = partition(l1, 0);
+            while (l1) {
+                cout << l1->val << endl;
+                l1 = l1->next;
+            }
+        }
+    };
+};
+
+
+class Leetcode89 {  // 格雷编码
+public:
+    class Solution {
+    public:
+        vector<int> grayCode(int n) {
+            vector<int> ret(1 << n);
+            for (int i = 0; i < ret.size(); i++) {
+                ret[i] = (i >> 1) ^ i;
+            }
+            return ret;
+        }
+
+
+        Solution() {
+            for (int i : grayCode(3)) {
+                cout << i << " ";
+            }
+        }
+    };
+};
+
+
+class Leetcode90 {  // 子集 II
+public:
+    class Solution {
+    public:
+        vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+            vector<vector<int>> rst;
+            vector<int> path;
+            vector<bool> used(nums.size(), false);
+            sort(nums.begin(), nums.end());
+            trace(rst, path, nums, used, 0);
+            return rst;
+        }
+
+
+        void trace(vector<vector<int>>& rst, vector<int>& path, vector<int>& nums, vector<bool>& used, int pos) {
+            rst.emplace_back(path);
+            for (int i = pos; i < nums.size(); i++) {
+                if (i > 0 && nums[i] == nums[i - 1] && used[i - 1] == false) {
+                    continue;
+                }
+                path.emplace_back(nums[i]);
+                used[i] = true;
+                trace(rst, path, nums, used, pos + 1);
+                used[i] = false;
+                path.pop_back();
+            }
+        }
+
+
+        Solution() {
+            vector<int> nums = {1, 2, 2};
+            vector<vector<int>> rst = subsetsWithDup(nums);
+            for (vector<int> i : rst) {
+                for (int j : i) {
+                    cout << j << " ";
+                }
+                cout << endl;
+            }
+        }
+    };
+};
+
+
+class Leetcode91 {  //  解码方法
+public:
+    class Solution {
+    public:
+        int numDecodings(string s) {
+            int cnt = 0;
+            if(s.size() == 0 || (s.size() == 1 && s[0] == '0')) return 0;
+            if(s.size() == 1) return 1;
+            vector<int> dp(s.size() + 1, 0);
+            dp[0] = 1;
+            for(int i = 0; i < s.size(); ++i){
+                dp[i+1] = s[i] == '0' ? 0 : dp[i];
+                if(i > 0 && (s[i-1] == '1' || (s[i-1] == '2' && s[i] <= '6'))){
+                    dp[i+1] += dp[i-1];
+                }
+            }
+            return dp.back();
+        }
+
+
+        Solution() {
+            cout << numDecodings("101110") << endl;
+        }
+    };
+};
+
+
+class Leetcode92 {  // 反转链表II
+public:
+    class Solution {
+    public:
+        ListNode* reverseBetween(ListNode* head, int left, int right) {
+            if (left == right) return head;
+            ListNode* dummyhead = new ListNode(0, head);
+            ListNode* pleft = dummyhead;
+            int counter = 1;
+            stack<ListNode*> sta;
+            while (counter <= left - 1) {
+                pleft = pleft->next;
+                counter++;
+            }
+            ListNode* rec = pleft->next;
+            while (left <= right) {
+                sta.push(rec);
+                rec = rec->next;
+                left++;
+            }
+            ListNode* pright = rec;
+            while (sta.size() != 0) {
+                pleft->next = sta.top();
+                pleft = pleft->next;
+                sta.pop();
+            }
+            pleft->next = pright;
+            return dummyhead->next;
+        }
+
+
+        ListNode *reverseBetweenOfficial(ListNode *head, int left, int right) {  // 官方题解
+            ListNode *dummyNode = new ListNode(-1);
+            dummyNode->next = head;
+            ListNode *pre = dummyNode;
+            for (int i = 0; i < left - 1; i++) {
+                pre = pre->next;
+            }
+            ListNode *cur = pre->next;
+            ListNode *next;
+            for (int i = 0; i < right - left; i++) {
+                next = cur->next;
+                cur->next = next->next;
+                next->next = pre->next;
+                pre->next = next;
+            }
+            return dummyNode->next;
+        }
+
+        Solution() {
+            cout << "Too lazy to generate a linked list." << endl;
+        }
+    };
+};
+
+
+class Leetcode93 {  // 复原IP地址（没做出来）
+public:
+    class Solution {
+    private:
+        vector<string> result;// 记录结果
+        // startIndex: 搜索的起始位置，pointNum:添加逗点的数量
+        void backtracking(string& s, int startIndex, int pointNum) {
+            if (pointNum == 3) { // 逗点数量为3时，分隔结束
+                // 判断第四段子字符串是否合法，如果合法就放进result中
+                if (isValid(s, startIndex, s.size() - 1)) {
+                    result.push_back(s);
+                }
+                return;
+            }
+            for (int i = startIndex; i < s.size(); i++) {
+                if (isValid(s, startIndex, i)) { // 判断 [startIndex,i] 这个区间的子串是否合法
+                    s.insert(s.begin() + i + 1 , '.');  // 在i的后面插入一个逗点
+                    pointNum++;
+                    backtracking(s, i + 2, pointNum);   // 插入逗点之后下一个子串的起始位置为i+2
+                    pointNum--;                         // 回溯
+                    s.erase(s.begin() + i + 1);         // 回溯删掉逗点
+                } else break; // 不合法，直接结束本层循环
+            }
+        }
+        // 判断字符串s在左闭又闭区间[start, end]所组成的数字是否合法
+        bool isValid(const string& s, int start, int end) {
+            if (start > end) {
+                return false;
+            }
+            if (s[start] == '0' && start != end) { // 0开头的数字不合法
+                    return false;
+            }
+            int num = 0;
+            for (int i = start; i <= end; i++) {
+                if (s[i] > '9' || s[i] < '0') { // 遇到非数字字符不合法
+                    return false;
+                }
+                num = num * 10 + (s[i] - '0');
+                if (num > 255) { // 如果大于255了不合法
+                    return false;
+                }
+            }
+            return true;
+        }
+    public:
+        vector<string> restoreIpAddresses(string s) {
+            result.clear();
+            if (s.size() > 12) return result; // 算是剪枝了
+            backtracking(s, 0, 0);
+            return result;
+        }
+
+
+        Solution() {
+            cout << "Nothing." << endl;
+        }
+    };
+};
+
+
+class Leetcode95 {  // 不同的二叉搜索树 II(没做出来)
+public:
+    class Solution {
+    public:
+        vector<TreeNode*> generateTrees(int start, int end) {
+            if (start > end) {
+                return { nullptr };
+            }
+            vector<TreeNode*> allTrees;
+            // 枚举可行根节点
+            for (int i = start; i <= end; i++) {
+                // 获得所有可行的左子树集合
+                vector<TreeNode*> leftTrees = generateTrees(start, i - 1);
+
+                // 获得所有可行的右子树集合
+                vector<TreeNode*> rightTrees = generateTrees(i + 1, end);
+
+                // 从左子树集合中选出一棵左子树，从右子树集合中选出一棵右子树，拼接到根节点上
+                for (auto& left : leftTrees) {
+                    for (auto& right : rightTrees) {
+                        TreeNode* currTree = new TreeNode(i);
+                        currTree->left = left;
+                        currTree->right = right;
+                        allTrees.emplace_back(currTree);
+                    }
+                }
+            }
+            return allTrees;
+        }
+
+        vector<TreeNode*> generateTrees(int n) {
+            if (!n) {
+                return {};
+            }
+            return generateTrees(1, n);
+        }
+
+
+        Solution() {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode96 {  // 不同的二叉搜索树
+public:
+    class Solution {
+    public:
+        int numTrees(int n) {
+            vector<int> dp(n + 1);
+            dp[0] = 1;
+            for (int i = 1; i <= n; i++) {
+                for (int j = 1; j <= i; j++) {
+                    dp[i] += dp[j - 1] * dp[i - j];
+                }
+            }
+            return dp[n];
+        }
+
+
+        Solution() {
+            cout << numTrees(5) << endl;
+        }
+    };
+};
+
+
+class Leetcode97 {  // 交错字符串
+public:
+    class Solution {
+    public:
+        bool isInterleave(string s1, string s2, string s3) {
+            int len1 = (int) s1.size();
+            int len2 = (int) s2.size();
+            int len3 = (int) s3.size();
+            if (len1 + len2 != len3) return false;
+            vector<vector<bool>> dp(len1 + 1, vector<bool>(len2 + 1, false));
+            dp[0][0] = true;
+            for (int i = 1; i <= len1; i++) {
+                dp[i][0] = dp[i - 1][0] && s1[i - 1] == s3[i - 1];
+            }
+            for (int j = 1; j <= len2; j++) {
+                dp[0][j] = dp[0][j - 1] && s2[j - 1] == s3[j - 1];
+            }
+            for (int i = 1; i <= len1; i++) {
+                for (int j = 1; j <= len2; j++) {
+                    dp[i][j] = (dp[i - 1][j] && s1[i - 1] == s3[i + j - 1]) || (dp[i][j - 1] && s2[j - 1] == s3[i + j - 1]);
+                }
+            }
+            return dp[len1][len2];
+        }
+
+
+        Solution() {
+            cout << isInterleave("aabcc","dbbca","aadbbcbcac");
+        }
+    };
+};
+
+
+class Leetcode98 {  // 验证二叉搜索树
+public:
+    class Solution {
+    public:
+        bool isValidBST(TreeNode* root) {
+            vector<int> nums;
+            inorderTraverse(nums, root);
+            for (int i = 0; i < nums.size() - 1; i++) {
+                if (nums[i] >= nums[i + 1]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+        void inorderTraverse(vector<int>& nums, TreeNode* root) {
+            if (root->left) {
+                inorderTraverse(nums, root->left);
+            }
+            nums.push_back(root->val);
+            if (root->right) {
+                inorderTraverse(nums, root->right);
+            }
+        }
+
+
+        Solution() {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode99 {  // 恢复二叉树
+public:
+    class Solution {
+    private:
+        int count = 0;
+    public:
+        void inorderTraverse(vector<int>& nums, TreeNode* root) {
+            if (!root) return;
+            if (root->left) {
+                inorderTraverse(nums, root->left);
+            }
+            nums.push_back(root->val);
+            if (root->right) {
+                inorderTraverse(nums, root->right);
+            }
+        }
+
+        void getTree(vector<int>& nums, TreeNode* root) {
+            if (root->left) {
+                getTree(nums, root->left);
+            }
+            root->val = nums[count++];
+            if (root->right) {
+                getTree(nums, root->right);
+            }
+        }
+
+        void recoverTree(TreeNode* root) {
+            vector<int> nums;
+            int left = -1, right = -1;
+            inorderTraverse(nums, root);
+            for (int i = 0; i < nums.size() - 1; i++) {
+                if (nums[i] > nums[i + 1] && left == -1) {
+                    left = i;
+                    continue;
+                }
+                if (nums[i] > nums[i + 1]) {
+                    right = i + 1;
+                    break;
+                }
+            }
+            right == -1 ? swap(nums[left], nums[left + 1]) : swap(nums[left], nums[right]);
+            getTree(nums, root);
+        }
+
+
+        Solution() {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode102 {  // 二叉树的层序遍历
+public:
+    class Solution {
+    public:
+        vector<vector<int>> levelOrder(TreeNode* root) {
+            if (!root) return {};
+            deque<TreeNode*> que;
+            vector<vector<int>> rst;
+            que.push_back(root);
+            while (!que.empty()) {
+                vector<int> path;
+                int len = que.size();
+                for (int i = 0; i < len; i++) {
+                    path.push_back(que.front()->val);
+                    if (que.front()->left) {
+                        que.push_back(que.front()->left);
+                    }
+                    if (que.front()->right) {
+                        que.push_back(que.front()->right);
+                    }
+                    que.pop_front();
+                }
+                rst.push_back(path);
+            }
+            return rst;
+        }
+
+
+        Solution() {
+            cout << "Too lazy to generate a tree.";
+        }
+    };
+};
+
+
+class Leetcode103 {  // 二叉树的锯齿形层序遍历
+public:
+    class Solution {
+    public:
+        vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+            vector<vector<int> > res;
+            if(!root) return res;
+            
+            queue<TreeNode *> q;
+            q.push(root);
+            int flag = 0;
+            while(!q.empty()) {
+                vector<int> out;
+                int size = q.size(); //取得每一层的长度
+                for(int i = 0; i < size; i++) {
+                    auto temp = q.front();
+                    q.pop();
+                    out.push_back(temp->val);
+                    if(temp->left) {
+                        q.push(temp->left);
+                    }
+                    if(temp->right) {
+                        q.push(temp->right);
+                    }
+                }
+                if(flag%2==1) {
+                    reverse(out.begin(),out.end());
+                }
+                res.push_back(out);
+                flag++;
+            }
+            return res;
+        }
+
+
+        Solution() {
+            cout << "Too lazy to generate a tree" << endl;
+        }
+    };
+};
+
+
+class Leetcode104 {  // 从前序与中序遍历序列构造二叉树
+public:
+    class Solution {
+    public:
+        TreeNode* find(vector<int>& preorder, vector<int>& inorder) {
+            int rootval = preorder[0];
+            TreeNode* root = new TreeNode(rootval);
+            vector<int> leftpre, rightpre, leftin, rightin;
+            int flag = 0;
+            for (int i = 0; i < inorder.size(); i++) {
+                if (rootval != inorder[i] && flag == 0) {
+                    leftin.push_back(inorder[i]);
+                }
+                if (rootval == inorder[i]) {
+                    flag = 1;
+                }
+                if (rootval != inorder[i] && flag == 1) {
+                    rightin.push_back(inorder[i]);
+                }
+            }
+            for (int i = 1; i < preorder.size(); i++) {
+                if (leftpre.size() != leftin.size()) {
+                    leftpre.push_back(preorder[i]);
+                } else {
+                    rightpre.push_back(preorder[i]);
+                }
+            }
+            if (leftpre.size() != 0) {
+                root->left = find(leftpre, leftin);
+            }
+            if (rightpre.size() != 0) {
+                root->right = find(rightpre, rightin);
+            }
+            return root;
+        }
+
+
+        TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+            return find(preorder, inorder);
+        }
+
+
+        Solution() {
+            vector<int> preOrder = {3, 9, 20, 15, 7};
+            vector<int> inOrder = {9, 3, 15, 20, 7};
+            TreeNode* rst = buildTree(preOrder, inOrder);
+        }
+    };
+};
+
+
+class Leetcode106 {  // 从中序与后序遍历序列构造二叉树
+public:
+    class Solution {
+    public:
+        TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+            int rootval = postorder[postorder.size() - 1];
+            TreeNode* root = new TreeNode(rootval);
+            vector<int> leftpre, rightpre, leftin, rightin;
+            int flag = 0;
+            for (int i = 0; i < inorder.size(); i++) {
+                if (rootval != inorder[i] && flag == 0) {
+                    leftin.push_back(inorder[i]);
+                }
+                if (rootval == inorder[i]) {
+                    flag = 1;
+                }
+                if (rootval != inorder[i] && flag == 1) {
+                    rightin.push_back(inorder[i]);
+                }
+            }
+            for (int i = 0; i < postorder.size() - 1; i++) {
+                if (leftpre.size() != leftin.size()) {
+                    leftpre.push_back(postorder[i]);
+                } else {
+                    rightpre.push_back(postorder[i]);
+                }
+            }
+            if (leftpre.size() != 0) {
+                root->left = buildTree(leftin, leftpre);
+            }
+            if (rightpre.size() != 0) {
+                root->right = buildTree(rightin, rightpre);
+            }
+            return root;
+        }
+
+
+        Solution() {
+            vector<int> postOrder = {9, 15, 7, 20, 3};
+            vector<int> inOrder = {9, 3, 15, 20, 7};
+            TreeNode* rst = buildTree(inOrder, postOrder);
+        }
+    };
+};
+
+
+class Leetcode107 {  // 二叉树的层序遍历 II
+public:
+    class Solution {
+    public:
+        vector<vector<int>> levelOrderBottom(TreeNode* root) {
+            if (!root) return {};
+            deque<TreeNode*> que;
+            vector<vector<int>> rst;
+            que.push_back(root);
+            while (!que.empty()) {
+                vector<int> path;
+                int len = que.size();
+                for (int i = 0; i < len; i++) {
+                    path.push_back(que.front()->val);
+                    if (que.front()->left) {
+                        que.push_back(que.front()->left);
+                    }
+                    if (que.front()->right) {
+                        que.push_back(que.front()->right);
+                    }
+                    que.pop_front();
+                }
+                rst.push_back(path);
+            }
+            reverse(rst.begin(), rst.end());
+            return rst;
+        }
+    };
+};
+
+
+class Leetcode109 {  // 有序链表转换二叉搜索树
+public:
+    class Solution {
+    public:
+        TreeNode* sortedListToBST(ListNode* head) {
+            if (!head) return nullptr;
+            if (!head->next) return new TreeNode(head->val);
+            ListNode* fast = head,* slow = head,* mid = nullptr;
+            while (fast && fast->next) {
+                fast = fast->next->next;
+                mid = slow;
+                slow = slow->next;
+            }
+            mid->next = nullptr;
+            ListNode* right = slow->next;
+            TreeNode* root = new TreeNode(slow->val);
+            root->left = sortedListToBST(head);
+            root->right = sortedListToBST(right);
+            return root;
+        }
+    };
+};
+
+
+class Leetcode113 {  // 路经总和
+public:
+    class Solution {
+    public:
+        void backTracking(TreeNode* node, int sum, int targetSum, vector<int>& path, vector<vector<int>>& rst) {
+            if (node) {
+                if (sum == targetSum && !node->left && !node->right) {
+                    rst.push_back(path);
+                }
+            }
+            if (node->left) {
+                path.push_back(node->left->val);
+                sum += node->left->val;
+                backTracking(node->left, sum, targetSum, path, rst);
+                path.pop_back();
+                sum -= node->left->val;
+            }
+            if (node->right) {
+                path.push_back(node->right->val);
+                sum += node->right->val;
+                backTracking(node->right, sum, targetSum, path, rst);
+                path.pop_back();
+                sum -= node->right->val;
+            }
+        }
+
+
+
+        vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+            if (!root) return {};
+            vector<int> path;
+            vector<vector<int>> rst;
+            path.push_back(root->val);
+            backTracking(root, root->val, targetSum, path, rst);
+            return rst;
+        }
+
+
+        Solution() {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
+
+class Leetcode114 {  // 二叉树展开为链表
+public:
+    class Solution {
+    public:
+        void flatten(TreeNode* root) {
+            if (!root) return;
+            if (root->left) {
+                flatten(root->left);
+            }
+            if (root->right) {
+                flatten(root->right);
+            }
+            TreeNode* rec = nullptr, *pleft = root;
+            if (root->left && root->right) {
+                rec = root->right;
+                root->right = root->left;
+                while (pleft->right) {
+                    pleft = pleft->right;
+                }
+                pleft->right = rec;
+                root->left = nullptr;
+            } else if (root->left && !root->right) {
+                root->right = root->left;
+                root->left = nullptr;
+            } else return;
+        }
+
+
+        Solution() {
+            TreeNode* t1 = new TreeNode(1);
+            TreeNode* t2 = new TreeNode(2);
+            TreeNode* t3 = new TreeNode(3);
+            t1->left = t2, t1->right = t3;
+            flatten(t1);
+            delete(t1, t2, t3);
+        }
+    };
+};
+
+
+class Leetcode120 {  // 三角形最小路径和
+public:
+    class Solution {
+    public:
+        int minimumTotal(vector<vector<int>>& triangle) {
+            int len = triangle.size();
+            for (int i = 1; i < len; i++) {
+                for (int j = 0; j < triangle[i].size(); j++) {
+                    if (j == 0) {
+                        triangle[i][j] += triangle[i - 1][j];
+                    } else if (j != triangle[i].size() - 1){
+                        triangle[i][j] += min(triangle[i - 1][j], triangle[i - 1][j - 1]);
+                    } else {
+                        triangle[i][j] += triangle[i - 1][j - 1];
+                    }
+                }
+            }
+            return *min_element(triangle[len - 1].begin(), triangle[len - 1].end());
+        }
+
+
+        Solution() {
+            vector<int> p1 = {1};
+            vector<int> p2 = {2, 3};
+            vector<vector<int>> nums;
+            nums.push_back(p1);
+            nums.push_back(p2);
+            cout << minimumTotal(nums) << endl;
+        }
+    };
+};
+
+
+class Leetcode122 {  // 买卖股票的最佳时机 II
+public:
+    class Solution {
+    public:
+        int maxProfit(vector<int>& prices) {
+            int profit = 0;
+            for (int i = 1; i < prices.size(); i++) {
+                if (prices[i] > prices[i - 1]) {
+                    profit += (prices[i] - prices[i - 1]);
+                }
+            }
+            return profit;
+        }
+
+
+        Solution() {
+            vector<int> nums = {1, 2, 3, 4, 5};
+            cout << maxProfit(nums) << endl;
+        }
+    };
+};
+
+
+class Leetcode129 {  // 求根节点到叶节点数字之和
+public:
+    class Solution {
+    public:
+        void backTracking(TreeNode* root, int& sum, int& path) {
+            if (!root) return;
+            if (!root->left && !root->right) {
+                sum += path;
+                sum += root->val;      
+                return;      
+            }
+            if (root->left) {
+                path += root->val;
+                path *= 10;
+                backTracking(root->left, sum, path);
+                path /= 10;
+                path -= root->val;
+            }
+            if (root->right) {
+                path += root->val;
+                path *= 10;
+                backTracking(root->right, sum, path);
+                path /= 10;
+                path -= root->val;
+            }
+        }
+
+        int sumNumbers(TreeNode* root) {
+            int sum = 0, path = 0;
+            backTracking(root, sum, path);
+            return sum;
+        }
+
+
+        Solution() {
+            cout << "Too lazy to generate a tree." << endl;
+        }
+    };
+};
+
 int main()
 {
-    Leetcode71::Solution s2;
+    Leetcode114::Solution s2;
     system("pause");
     return 0;
 }
